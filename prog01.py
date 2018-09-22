@@ -48,5 +48,6 @@ for sal in range(0, 623):
     lista2.append(array1year[sal] +'-'+array1month[sal])
 
 listaGeneral.append([lista2, lista])
-df = pd.DataFrame(np.array(listaGeneral))
-print(df)
+print(listaGeneral)
+#df = pd.DataFrame(np.array(listaGeneral))
+#print(df)
