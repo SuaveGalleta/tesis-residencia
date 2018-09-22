@@ -2,7 +2,7 @@
 """
 Created on Tue Aug 28 15:15:20 2018
 
-@author: maorc, gcetzalb
+@author: maorc, gcetzalb, esuarez
 """
 import re
 import numpy as np
@@ -47,7 +47,10 @@ for valor in array2:
 for sal in range(0, 623):
     lista2.append(array1year[sal] +'-'+array1month[sal])
 
-listaGeneral.append([lista2, lista])
-print(listaGeneral)
-#df = pd.DataFrame(np.array(listaGeneral))
-#print(df)
+listaGeneral = dict(zip(lista2[1:], lista[1:]))
+tupla = listaGeneral.items()
+#listaGeneral.append([lista2, lista])
+#print(tupla)
+df = pd.DataFrame(list(tupla))
+df.columns = [ "fecha", "valor"]
+print(df)
