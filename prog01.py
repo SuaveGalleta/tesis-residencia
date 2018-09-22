@@ -7,6 +7,7 @@ Created on Tue Aug 28 15:15:20 2018
 import re
 import numpy as np
 import pandas as pd
+import matplotlib.pyplot as tls
 
 #file=open("Mensuales_ONI.dat","r")
 #a=file.read()
@@ -53,4 +54,6 @@ tupla = listaGeneral.items()
 #print(tupla)
 df = pd.DataFrame(list(tupla))
 df.columns = [ "fecha", "valor"]
-print(df)
+#print(df)
+tls.plot(df["valor"].astype(float))
+tls.show()
