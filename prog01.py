@@ -66,7 +66,7 @@ data_oni =[]
 for item in nueva_list:
     data_oni.append(float(item))
 
-t = data_oni
+t = np.array(data_oni)
 
     
 x = zeros(len(t))
