@@ -10,10 +10,7 @@ import re
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as tls
-from scipy.signal import *
-from scipy.interpolate import splrep, splev
-from numpy import *
-from matplotlib.pyplot import *
+from PyEMD import EMD
 
 #limpieza de datos a graficar
 
@@ -59,56 +56,25 @@ tls.xticks([0,100,200,300,400,500,600], [1996,1970,1980,1990,2000,2015,2017])
 
 #Descomposición Modal Empirica (DME)
 
-f = 1
-#f2 = 1
 nueva_list = lista[1:]
 data_oni =[]
 for item in nueva_list:
     data_oni.append(float(item))
+x = np.linspace(0, 10, 623)
+signal = np.array(data_oni)
+emd = EMD()
+IMFS = emd.emd(signal)
+print(len(IMFS))
+N = IMFS.shape[0]+1
 
-lista_new= []
-for i in data_oni:
-    if i not in lista_new:
-        lista_new.append(i)
+#for i, imf in enumerate(IMFS):
+#    tls.figure("DME")
+#    tls.subplot(N,1,i+2)
+#    tls.plot(x,imf, 'g')
+#    tls.title("IMF "+str(i+1))
+#    tls.xlabel("Time [s]")
 
-ordenar = sort(lista_new)
-t = np.array(ordenar)
-
-    
-x = zeros(len(t))
-xmin = zeros(len(t))
-xmax = zeros(len(t))
-
-k = 4 #numero del modal
-
-newsi = zeros([k+1,len(x)])
-mod = zeros([k,len(x)])
-
-ruido = random.uniform(-0.5, 0.5, 47)
-#print(ruido)
-signal = sin(2*pi*f*t) + ruido
-x = signal
-newsi[0,:] = x
-
-for i in range(k):
-    x = newsi[i,:]
-    data1 = argrelmax(x)[0]
-    xmax = x.take(data1)
-    tmax = t.take(data1)
-    data2 = argrelmin(x)[0]
-    xmin = x.take(data2)
-    tmin = t.take(data2)
-
-    coef = splrep(tmax,xmax)
-    resmax = splev(t,coef)
-    coef = splrep(tmin,xmin)
-    resmin = splev(t,coef)
-
-    mu = (resmax + resmin)/2
-    mod[i,:] = x - mu
-    newsi[i+1,:] = x - mod[i,:]
-
-
+#tls.show()
 
 
 

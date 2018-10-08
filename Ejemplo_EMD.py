@@ -16,8 +16,19 @@ IMFs = emd(signal, x)
 print(IMFs)
 n = IMFs.shape[0]+1
 
+tls.figure("Señal")
 tls.plot(signal)
 
+tls.figure("DME")
+tls.plot(IMFs[9])
+
+
+for i, imf in enumerate(IMFs):
+    tls.figure("funciones intrinsecas")
+    tls.subplot(n,1,i+2)
+    tls.plot(x,imf, 'g')
+    tls.title("IMF "+str(i+1))
+    tls.xlabel("Time [s]")
 tls.show()
 
 # Define signal
