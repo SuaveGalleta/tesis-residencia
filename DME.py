@@ -32,7 +32,7 @@ for i in range(k):
     xmin = x.take(data2)
     tmin = t.take(data2)  
 
-    coef = splrep(tmax,xmax)    
+    coef = splrep(tmax,xmax)
     resmax = splev(t,coef)
     coef = splrep(tmin,xmin)    
     resmin = splev(t,coef)

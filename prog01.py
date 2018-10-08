@@ -66,7 +66,13 @@ data_oni =[]
 for item in nueva_list:
     data_oni.append(float(item))
 
-t = np.array(data_oni)
+lista_new= []
+for i in data_oni:
+    if i not in lista_new:
+        lista_new.append(i)
+
+ordenar = sort(lista_new)
+t = np.array(ordenar)
 
     
 x = zeros(len(t))
@@ -75,25 +81,25 @@ xmax = zeros(len(t))
 
 k = 4 #numero del modal
 
-newsi = zeros([k+1, len(x)])
+newsi = zeros([k+1,len(x)])
 mod = zeros([k,len(x)])
 
-ruido = random.uniform(-0.5, 0.5, 623)
+ruido = random.uniform(-0.5, 0.5, 47)
 #print(ruido)
-signal = sin(2*pi*f*t)+ruido
+signal = sin(2*pi*f*t) + ruido
 x = signal
 newsi[0,:] = x
 
 for i in range(k):
     x = newsi[i,:]
-    data1 = argrelmax(x)
-    xmax = x.take(data1)[0]
+    data1 = argrelmax(x)[0]
+    xmax = x.take(data1)
     tmax = t.take(data1)
     data2 = argrelmin(x)[0]
     xmin = x.take(data2)
     tmin = t.take(data2)
 
-    coef = splrep(tmax, xmax)
+    coef = splrep(tmax,xmax)
     resmax = splev(t,coef)
     coef = splrep(tmin,xmin)
     resmin = splev(t,coef)
