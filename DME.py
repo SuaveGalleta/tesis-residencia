@@ -6,6 +6,7 @@ from scipy.interpolate import splrep, splev
 f = 1
 f2 = 1
 t = linspace(0,10,10000)
+print(type(t))
 x = zeros(len(t))
 xmin = zeros(len(t))
 xmax = zeros(len(t))
