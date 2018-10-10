@@ -11,6 +11,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as tls
 from PyEMD import EMD
+import scipy.io
 
 #limpieza de datos a graficar
 
@@ -64,7 +65,7 @@ x = np.linspace(0, 10, 623)
 signal = np.array(data_oni)
 emd = EMD()
 IMFS = emd.emd(signal)
-print(len(IMFS))
+#print(len(IMFS))
 N = IMFS.shape[0]+1
 
 #for i, imf in enumerate(IMFS):
@@ -73,6 +74,7 @@ N = IMFS.shape[0]+1
 #    tls.plot(x,imf, 'g')
 #    tls.title("IMF "+str(i+1))
 #    tls.xlabel("Time [s]")
+
 
 #tls.show()
 
