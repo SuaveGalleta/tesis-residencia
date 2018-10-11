@@ -1,4 +1,48 @@
-from tkinter import *
+import tkinter as tk 
+
+class main(tk.Tk):
+
+    def __init__(self, *args, **kwargs):
+
+        
+        tk.Tk.__init__(self, *args, **kwargs)
+        container = tk.Frame(self)
+        
+        
+
+        container.pack(side="top",fill="both", expand=True)
+
+        container.grid_rowconfigure(0,weight=1)
+        container.grid_columnconfigure(0,weight=1)
+
+        self.frames = {}
+
+        frame = Startpage(container, self)
+        self.frames[Startpage] = frame
+        frame.grid(row=0, column = 0, sticky="nsew")
+        self.show_frame(Startpage)
+    
+    def show_frame(self,count):
+        frame = self.frames[count]
+        frame.tkraise()
+
+class Startpage(tk.Frame):
+
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self,parent)
+        etiquetatitulo = tk.Label(self, text= "Bienvenidos")
+        etiquetatitulo.pack(pady=10, padx=10)
+
+app=main()
+app.title("Analisis de datos climaticos")
+app.geometry("600x350") 
+app.iconbitmap("logo_tec.ico")
+app.mainloop()
+
+
+
+
+"""
 
 
 root = Tk()
@@ -9,7 +53,7 @@ root.geometry("600x350")
 root.iconbitmap("logo_tec.ico")
 
 #Menu
-"""
+
 menubar = Menu(root)
 root.config(menu=menubar)
 
@@ -29,7 +73,7 @@ helpmenu.add_command(label="Acerca de...")
 menubar.add_cascade(label="Archivo", menu = filemenu)
 menubar.add_cascade(label="Analisis", menu = analisismenu)
 menubar.add_cascade(label="Ayuda", menu = helpmenu)
-"""
+
 
 
 # ventana Inicio
@@ -44,6 +88,9 @@ etiquetatitulo.pack(pady = 5,ipady=5)
 etiquetatitulo2 = Label(frame, text="Sistema para el analisis de datos climaticos")
 etiquetatitulo2.config(font=("Arial", 20))
 etiquetatitulo2.pack(padx=5, pady = 5, ipadx=5,ipady=5)
+Button(frame, text="Iniciar", width=20).pack(padx=5, pady =10)
+Button(frame, text="Salir", width=20).pack(padx=5, pady =10)
+"""
 
 
 
@@ -54,5 +101,3 @@ etiquetatitulo2.pack(padx=5, pady = 5, ipadx=5,ipady=5)
 
 
 
-
-root.mainloop()
