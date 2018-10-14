@@ -1,5 +1,5 @@
-import tkinter as tk 
-
+"""
+import tkinter as tk
 class main(tk.Tk):
 
     def __init__(self, *args, **kwargs):
@@ -30,8 +30,17 @@ class Startpage(tk.Frame):
 
     def __init__(self, parent, controller):
         tk.Frame.__init__(self,parent)
+        path = tk.PhotoImage(file = "logo_tec.png")
+        logo = tk.Label(self, image= path)
+        logo.pack(pady = 5,ipady=5)      
         etiquetatitulo = tk.Label(self, text= "Bienvenidos")
+        etiquetatitulo.config(font=("Arial", 25))
         etiquetatitulo.pack(pady=10, padx=10)
+        etiquetatitulo2 = tk.Label(self, text="Sistema para el analisis de datos climaticos")
+        etiquetatitulo2.config(font=("Arial", 20))
+        etiquetatitulo2.pack(padx=5, pady = 5, ipadx=5,ipady=5)
+        tk.Button(self, text="Iniciar", width=20).pack(padx=5, pady =10)
+        tk.Button(self, text="Salir", width=20).pack(padx=5, pady =10)
 
 app=main()
 app.title("Analisis de datos climaticos")
@@ -44,7 +53,7 @@ app.mainloop()
 
 """
 
-
+from tkinter import *
 root = Tk()
 
 root.title("Analisis de datos climaticos")
@@ -52,27 +61,48 @@ root.resizable(1,1)
 root.geometry("600x350")
 root.iconbitmap("logo_tec.ico")
 
-#Menu
+#comandos para los botones
 
-menubar = Menu(root)
-root.config(menu=menubar)
+#comando para salir
+def salir():
+    root.quit()
 
-filemenu = Menu(menubar, tearoff=0)
-filemenu.add_command(label="Abrir Archivo")
-filemenu.add_separator()
-filemenu.add_command(label="Cerrar")
+#comando abrir nueva ventana
+def cargar_archivos():
+    #ventana de la seleccion de datos climaticos
+    abrir_data=Tk()
+    abrir_data.title("Analisis de datos climaticos")
+    abrir_data.resizable(1,1)
+    abrir_data.geometry("600x350")
+    abrir_data.iconbitmap("logo_tec.ico")
+    frame2 = Frame(abrir_data, width=250, height=250)
+    frame2.grid(row=0, colum=1)
+    frame3 = Frame(abrir_data, width=250, height=250)
+    frame3.grid(row=0, colum=2)
+    titulo2=Label(frame2, text="Seleccione el archivo" )
+    titulo2.config(font=("Arial", 15))
 
-analisismenu = Menu(menubar, tearoff=0)
-analisismenu.add_command(label="EMD")
+    titulo2.grid(padx=5, pady =5, row=0, column=3)
+    direccion = Entry(frame2, width=40)
+    direccion.config()
+    direccion.grid(padx=5, pady=5, ipadx=5, ipady=5, row=1, column=3 ) 
+    file_choosser= Button(frame2, text="Seleccionar Archivo" ,width=20)
+    file_choosser.config()
+    file_choosser.grid(padx=5, pady=5, ipadx=5, ipady=5, row=1, column=4, side="center")
+    root.iconify()
 
-helpmenu = Menu(menubar, tearoff=0)
-helpmenu.add_command(label="Ayuda")
-helpmenu.add_separator()
-helpmenu.add_command(label="Acerca de...")
 
-menubar.add_cascade(label="Archivo", menu = filemenu)
-menubar.add_cascade(label="Analisis", menu = analisismenu)
-menubar.add_cascade(label="Ayuda", menu = helpmenu)
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -88,10 +118,13 @@ etiquetatitulo.pack(pady = 5,ipady=5)
 etiquetatitulo2 = Label(frame, text="Sistema para el analisis de datos climaticos")
 etiquetatitulo2.config(font=("Arial", 20))
 etiquetatitulo2.pack(padx=5, pady = 5, ipadx=5,ipady=5)
-Button(frame, text="Iniciar", width=20).pack(padx=5, pady =10)
-Button(frame, text="Salir", width=20).pack(padx=5, pady =10)
-"""
+Button(frame, text="Iniciar", width=20, command=cargar_archivos).pack(padx=5, pady =10)
+Button(frame, text="Salir", width=20, command=salir).pack(padx=5, pady =10)
 
+
+
+
+root.mainloop()
 
 
 

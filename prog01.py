@@ -68,15 +68,15 @@ IMFS = emd.emd(signal)
 #print(len(IMFS))
 N = IMFS.shape[0]+1
 
-#for i, imf in enumerate(IMFS):
-#    tls.figure("DME")
-#    tls.subplot(N,1,i+2)
-#    tls.plot(x,imf, 'g')
-#    tls.title("IMF "+str(i+1))
-#    tls.xlabel("Time [s]")
+for i, imf in enumerate(IMFS):
+    tls.figure("DME")
+    tls.subplot(N,1,i+2)
+    tls.plot(x,imf, 'g')
+    tls.title("IMF "+str(i+1))
+    tls.xlabel("Time [s]")
 
 
-#tls.show()
+tls.show()
 
 
 
