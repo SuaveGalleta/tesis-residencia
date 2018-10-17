@@ -3,6 +3,7 @@ from tkinter import filedialog
 import re
 import pandas as pd
 import matplotlib.pyplot as tls
+from tkinter import ttk
 root = Tk()
 
 root.title("Analisis de datos climaticos")
@@ -66,7 +67,29 @@ def cargar_archivos():
             listaGeneral = dict(zip(lista2[1:], lista[1:]))
             tupla = listaGeneral.items()
             df = pd.DataFrame(list(tupla))
-            print(df)        
+            print(df)
+            frame3=Frame(frame2, width=250, height=250)
+            frame3.grid(row=3, column=0)
+            """ 
+            scrollbar = Scrollbar(frame3)
+            scrollbar.pack( side = RIGHT, fill = Y )
+            mylist= Listbox(frame3, yscrollcommand= scrollbar.set)
+            for line in tupla:
+                mylist.insert(END,line)
+            mylist.pack()
+            scrollbar.config(command=mylist.yview)
+            """
+            scrollbar = Scrollbar(frame3)
+            scrollbar.pack( side = RIGHT, fill = Y )
+            scrollbarx= Scrollbar(frame3, orient=HORIZONTAL)
+            scrollbarx.pack(side= BOTTOM, fill = X )
+            mylist = ttk.Treeview(frame3, yscrollcommand=scrollbar.set, xscrollcommand=scrollbarx.set)
+            mylist.pack()
+            mylist.insert('', '0', 'item1', text="First Item")
+            
+
+            
+
         
         ver_reg= Button(frame2, text="Ver registros", width=20, command=ver_mas)
         ver_reg.grid(padx=5, pady=5, ipadx=5, ipady=5,row=2, column=1)
