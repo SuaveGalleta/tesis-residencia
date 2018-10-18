@@ -71,7 +71,8 @@ def cargar_archivos():
             #visualizacion de los datos seleccionados
             frame3=Frame(frame2, width=250, height=250)
             frame3.grid(row=3, column=0, padx = 10, pady=5)
-            """ 
+             
+            """
             scrollbar = Scrollbar(frame3)
             scrollbar.pack( side = RIGHT, fill = Y )
             mylist= Listbox(frame3, yscrollcommand= scrollbar.set)
@@ -80,30 +81,47 @@ def cargar_archivos():
             mylist.pack()
             scrollbar.config(command=mylist.yview)
             """
+            
             scrollbar = Scrollbar(frame3)
             scrollbar.pack( side = RIGHT, fill = Y )
             scrollbarx= Scrollbar(frame3, orient=HORIZONTAL)
             scrollbarx.pack(side= BOTTOM, fill = X )
-            mylist = ttk.Treeview(frame3, yscrollcommand=scrollbar.set, xscrollcommand=scrollbarx.set)
+            mylist = ttk.Treeview(frame3, yscrollcommand=scrollbar.set, xscrollcommand=scrollbarx.set, columns=("valor"))
             mylist.pack()
-            for num in range(len(df)):
-                mylist.insert('', 'end', 'item'+str(num), text=num)
-            
-            mylist.config(columns=('Fecha','Valor'))
-            mylist.heading('Fecha', text='Fecha')
-            mylist.heading('Valor', text='Valor')
-            
+            x=-1
+            y=-1
+            #Mostrar fechas en el treeview
+            for num in df[0]:
+                x = x+1
+                mylist.insert('','end', "item"+str(x) ,text=num)
+                
+            """
+            for key in df[0]:
+                #print(key)
+                x = x+1
+                mylist.set(x,'fecha', key)
+            """
+            #mostrar su respectivo valor
+            for value in df[1]:
+                y=y+1
+                mylist.set("item"+str(y),'valor', value)    
+
+            """
             for line in range(len(df)):
                 for line2 in df.head():
                     mylist.set(line,'Fecha',line2)
+            """
+            """
+            for line in range(len(df)):
+                for value in lista2 :
+                    mylist.set("item"+str(line),'fecha', value)
+            """    
 
-                
-
-        
+        #boton para vizualizar los registros del archivo seleccionado 
         ver_reg= Button(frame2, text="Ver registros", width=20, command=ver_mas)
         ver_reg.grid(padx=5, pady=5, ipadx=5, ipady=5,row=2, column=1)
          
-
+    #boton para seleccionar el archivo climatico a analizar
     file_choosser= Button(frame2, text="Seleccionar Archivo" ,width=20, command=abrir_dialog)
     file_choosser.grid(padx=5, pady=5, ipadx=5, ipady=5, row=1, column=1)
    
