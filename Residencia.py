@@ -81,11 +81,12 @@ def cargar_archivos():
             mylist.pack()
             scrollbar.config(command=mylist.yview)
             """
-            
+            #creacion de los scrollbars
             scrollbar = Scrollbar(frame3)
             scrollbar.pack( side = RIGHT, fill = Y )
             scrollbarx= Scrollbar(frame3, orient=HORIZONTAL)
             scrollbarx.pack(side= BOTTOM, fill = X )
+            #creacion del treeview y su configuracion
             mylist = ttk.Treeview(frame3, yscrollcommand=scrollbar.set, xscrollcommand=scrollbarx.set, columns=("valor"))
             mylist.pack()
             x=-1
