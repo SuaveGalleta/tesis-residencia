@@ -14,9 +14,6 @@ def salir():
     root.quit()
 
 
-
-
-
 #comando abrir nueva ventana
 def cargar_archivos():
     #ventana de la seleccion de datos climaticos
@@ -132,19 +129,6 @@ def cargar_archivos():
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 # ventana Inicio
 frame = Frame(root, width = 250, height = 250)
 frame.pack(fill = "both", expand = 1)
@@ -161,15 +145,5 @@ Button(frame, text="Iniciar", width=20, command=cargar_archivos).pack(padx=5, pa
 Button(frame, text="Salir", width=20, command=salir).pack(padx=5, pady =10)
 
 
-
-
 root.mainloop()
-
-
-
-
-
-
-
-
 
