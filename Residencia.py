@@ -86,6 +86,8 @@ def cargar_archivos():
             #creacion del treeview y su configuracion
             mylist = ttk.Treeview(frame3, yscrollcommand=scrollbar.set, xscrollcommand=scrollbarx.set, columns=("valor"))
             mylist.pack()
+            mylist.heading("#0",text="Fecha")
+            mylist.heading("valor",text="Valor")
             x=-1
             y=-1
             #Mostrar fechas en el treeview
