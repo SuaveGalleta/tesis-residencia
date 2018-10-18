@@ -68,8 +68,9 @@ def cargar_archivos():
             tupla = listaGeneral.items()
             df = pd.DataFrame(list(tupla))
             print(df)
+            #visualizacion de los datos seleccionados
             frame3=Frame(frame2, width=250, height=250)
-            frame3.grid(row=3, column=0)
+            frame3.grid(row=3, column=0, padx = 10, pady=5)
             """ 
             scrollbar = Scrollbar(frame3)
             scrollbar.pack( side = RIGHT, fill = Y )
@@ -85,10 +86,18 @@ def cargar_archivos():
             scrollbarx.pack(side= BOTTOM, fill = X )
             mylist = ttk.Treeview(frame3, yscrollcommand=scrollbar.set, xscrollcommand=scrollbarx.set)
             mylist.pack()
-            mylist.insert('', '0', 'item1', text="First Item")
+            for num in range(len(df)):
+                mylist.insert('', 'end', 'item'+str(num), text=num)
             
+            mylist.config(columns=('Fecha','Valor'))
+            mylist.heading('Fecha', text='Fecha')
+            mylist.heading('Valor', text='Valor')
+            
+            for line in range(len(df)):
+                for line2 in df.head():
+                    mylist.set(line,'Fecha',line2)
 
-            
+                
 
         
         ver_reg= Button(frame2, text="Ver registros", width=20, command=ver_mas)
