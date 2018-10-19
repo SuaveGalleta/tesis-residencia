@@ -4,6 +4,9 @@ import re
 import pandas as pd
 import matplotlib.pyplot as tls
 from tkinter import ttk
+from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg
+from matplotlib.figure import Figure
+import matplotlib.backends.tkagg as tkagg
 root = Tk()
 
 root.title("Analisis de datos climaticos")
@@ -68,6 +71,8 @@ def cargar_archivos():
             #visualizacion de los datos seleccionados
             frame3=Frame(frame2, width=250, height=250)
             frame3.grid(row=3, column=0, padx = 10, pady=5)
+
+             
              
             """
             scrollbar = Scrollbar(frame3)
@@ -115,7 +120,30 @@ def cargar_archivos():
             for line in range(len(df)):
                 for value in lista2 :
                     mylist.set("item"+str(line),'fecha', value)
-            """    
+            """
+            #Realizar y vizualizar graficas
+            def realizar_grafica():
+                frame4 = Frame(frame2,width=250, height=250)
+                frame4.grid(padx=10, pady=10, row=3, column=2)
+                namegraph= StringVar()
+                name_ejex= StringVar()
+                name_ejey=StringVar()
+                Label(frame4, text="Parametros para realizar la grafica").grid(row=0, column=0)
+                Label(frame4, text="Titulo de la grafica").grid(row=1, column=0)
+                titlegraph= Entry(frame4, textvariable=namegraph)
+                titlegraph.grid(ipadx=5, ipady=5, padx=5, pady=5, row=1, column=1)
+                Label(frame4, text="Label para el eje x").grid(row=2, column=0)
+                ejex= Entry(frame4, textvariable=name_ejex)
+                ejex.grid(ipadx=5, ipady=5, padx=5, pady=5, row=2, column=1)
+                Label(frame4, text="Label para e eje y").grid(row=3, column=0)
+                ejey= Entry(frame4, textvariable=name_ejey)
+                ejey.grid(ipadx=5, ipady=5, padx=5, pady=5, row=3, column=1)
+                Button(frame4,)
+
+                
+
+            graph = Button(frame2,text="Ver Grafica", width=20, command=realizar_grafica)
+            graph.grid(row=3, column= 1, padx=5, pady=5, ipadx=5, ipady=5)    
 
         #boton para vizualizar los registros del archivo seleccionado 
         ver_reg= Button(frame2, text="Ver registros", width=20, command=ver_mas)
