@@ -36,7 +36,7 @@ def cargar_archivos():
     frame2.grid(row=0, column=1)
     scrollbary = Scrollbar(root)
     scrollbary.pack( side = RIGHT, fill = Y )
-    frame2.config(yscrollcommand=scrollbar.set)
+    #frame2.config(yscrollcommand=scrollbar.set)
     
     titulo2=Label(frame2, text="Analisis de Datos Climaticos" )
     titulo2.config(font=(15))

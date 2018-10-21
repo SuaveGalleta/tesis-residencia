@@ -10,8 +10,8 @@ import re
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as tls
-#from PyEMD import EMD
 import scipy.io
+from PyEMD import EMD
 
 #limpieza de datos a graficar
 
@@ -56,7 +56,7 @@ tls.xticks([0,100,200,300,400,500,600], [1996,1970,1980,1990,2000,2015,2017])
 #tls.show()
 
 #Descomposición Modal Empirica (DME)
-"""
+
 nueva_list = lista[1:]
 data_oni =[]
 for item in nueva_list:
@@ -75,7 +75,7 @@ for i, imf in enumerate(IMFS):
     tls.title("IMF "+str(i+1))
     tls.xlabel("Time [s]")
 
-"""
+
 tls.show()
 
 
