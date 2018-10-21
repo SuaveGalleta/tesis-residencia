@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import filedialog
+from tkinter import messagebox 
 
 
 #global ruta_new
@@ -49,7 +50,7 @@ class AnalisisClima(tk.Tk):
         
         self.frames={}
 
-        for F in (Inicio, Show_dialog):
+        for F in (Inicio, Show_dialog, Show_data):
 
         
             frame= F(container, self)
@@ -85,8 +86,10 @@ class Inicio(tk.Frame):
         welcome.pack(pady=5, padx=10,ipady=5, ipadx=10)
         maintitle=tk.Label(self, text="Analisis de datos climaticos", font=("Arial",25))
         maintitle.pack(pady=10, padx=10,ipady=5, ipadx=5)
-        boton_iniciar= tk.Button(self, text="Iniciar", command=lambda:controller.show_frame(Show_dialog))
+        boton_iniciar= tk.Button(self, text="Iniciar",width=20, command=lambda:controller.show_frame(Show_dialog))
         boton_iniciar.pack(padx=5, pady =5, ipadx=5, ipady=5)
+        boton_salir =tk.Button(self, text="Salir", command=self.quit, width=20)
+        boton_salir.pack(padx=5, pady =5, ipadx=5, ipady=5)
 
 
 class Show_dialog(tk.Frame):
@@ -97,18 +100,35 @@ class Show_dialog(tk.Frame):
         volver.grid(row=0, column=0, padx=15, pady =5, ipadx=5, ipady=5)
         label = tk.Label(self, text="Seleccionar Archivo", font=("Arial", 20))
         label.grid(row=0, column=1)
-        me = Mis_metodos()
-        boton_select= tk.Button(self,text="Abrir Archivo", command=me.opendialog)    
-        boton_select.grid(row=1, column=1)
-        ver_ruta = tk.Label(self, text=me.opendialog) 
-        ver_ruta.grid(row=1, column=0)
+
+        def opendialog():
+            #ruta.filename=filedialog.askdirectory()
+            self.filename=filedialog.askopenfilename(title='Seleccionar el archivo de informacion', filetypes=(("Archivos Data","*.dat"),("Todos los Archivos","*.*")))   
+            messagebox.showinfo("Archivo Seleccionado", self.filename)
+            ver_data=tk.Button(self, text="Ver Archivo", command=lambda:controller.show_frame(Show_data))
+            ver_data.grid(row=2, column=1, padx=5, pady =5, ipadx=5, ipady=5)
+            return self.filename
+        
+        
+        boton_select= tk.Button(self,text="Abrir Archivo", command=opendialog) 
+        boton_select.grid(row=1, column=1, padx=5, pady =5, ipadx=5, ipady=5)
+       
 
 
-class Mis_metodos():
-    
-    def opendialog(self):
-        ruta=filedialog.askopenfilename(title='Seleccionar el archivo de informacion', filetypes=(("Archivos Data","*.dat"),("Todos los Archivos","*.*")))
-        return ruta
+class Show_data(tk.Frame):
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self,parent)
+
+        def ver():
+            messagebox.showinfo("Archivo Seleccionado", )
+
+        boton_select= tk.Button(self,text="Abrir Archivo", command=ver) 
+        boton_select.grid(row=1, column=1, padx=5, pady =5, ipadx=5, ipady=5)
+        
+        
+
+
+
   
         
         

@@ -1,17 +1,26 @@
 from tkinter import *
 from tkinter import filedialog
 import re
+import matplotlib
+matplotlib.use("TkAgg")
 import pandas as pd
 import matplotlib.pyplot as tls
 from tkinter import ttk
-from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg
+
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2TkAgg
 from matplotlib.figure import Figure
-import matplotlib.backends.tkagg as tkagg
+import matplotlib.animation as animation
+from matplotlib import	style
 root = Tk()
 
 root.title("Analisis de datos climaticos")
 root.resizable(1,1)
+style.use("ggplot")
 
+# figure permite dibujar, en este caso permite mostrar la grafica
+# add_subplot agregar al canvas en este caso el figure
+f = Figure(figsize=(10,5), dpi=100)
+a = f.add_subplot(111)
 #comando para salir
 def salir():
     root.quit()
@@ -25,15 +34,18 @@ def cargar_archivos():
     abrir_data.resizable(1,1)
     frame2 = Frame(abrir_data, width=250, height=250)
     frame2.grid(row=0, column=1)
-    titulo2=Label(frame2, text="Seleccione el archivo" )
+    scrollbary = Scrollbar(root)
+    scrollbary.pack( side = RIGHT, fill = Y )
+    frame2.config(yscrollcommand=scrollbar.set)
+    
+    titulo2=Label(frame2, text="Analisis de Datos Climaticos" )
     titulo2.config(font=(15))
-    titulo2.grid(padx=5, pady =5, row=0, column=0)
+    titulo2.grid(padx=5, pady =5, row=0, column=0, columnspan=4)
     
     #abrir cuadro de seleccion del archivo
     def abrir_dialog():
         ruta=filedialog.askopenfilename(title='Seleccionar el archivo de informacion', filetypes=(("Archivos Data","*.dat"),("Todos los Archivos","*.*")))
         pathlabel=Label(frame2)
-    
         pathlabel.config(text=ruta)
         pathlabel.grid(row=1,column=0)
 
@@ -67,22 +79,12 @@ def cargar_archivos():
             listaGeneral = dict(zip(lista2[1:], lista[1:]))
             tupla = listaGeneral.items()
             df = pd.DataFrame(list(tupla))
-            print(df)
+            df.columns = [ "fecha", "valor"]
+            #print(df)
             #visualizacion de los datos seleccionados
             frame3=Frame(frame2, width=250, height=250)
             frame3.grid(row=3, column=0, padx = 10, pady=5)
 
-             
-             
-            """
-            scrollbar = Scrollbar(frame3)
-            scrollbar.pack( side = RIGHT, fill = Y )
-            mylist= Listbox(frame3, yscrollcommand= scrollbar.set)
-            for line in tupla:
-                mylist.insert(END,line)
-            mylist.pack()
-            scrollbar.config(command=mylist.yview)
-            """
             #creacion de los scrollbars
             scrollbar = Scrollbar(frame3)
             scrollbar.pack( side = RIGHT, fill = Y )
@@ -96,49 +98,49 @@ def cargar_archivos():
             x=-1
             y=-1
             #Mostrar fechas en el treeview
-            for num in df[0]:
+            for num in df["fecha"]:
                 x = x+1
                 mylist.insert('','end', "item"+str(x) ,text=num)
                 
-            """
-            for key in df[0]:
-                #print(key)
-                x = x+1
-                mylist.set(x,'fecha', key)
-            """
             #mostrar su respectivo valor
-            for value in df[1]:
+            for value in df["valor"]:
                 y=y+1
                 mylist.set("item"+str(y),'valor', value)    
+            
+            namegraph= StringVar()
+            name_ejex= StringVar()
+            name_ejey=StringVar()
+            
+            #ver grafica
+            def ver_grafica():
+                frame5= Frame(frame2, width=500, height=500)
+                frame5.grid(row=4, column=0, columnspan=1)
+                my_value = df["valor"].astype(float)
+                a.plot(my_value)
+                canvas = FigureCanvasTkAgg(f, frame5)
+                canvas.show()
+                canvas.get_tk_widget().pack(side = TOP, fill = BOTH, expand = True)
 
-            """
-            for line in range(len(df)):
-                for line2 in df.head():
-                    mylist.set(line,'Fecha',line2)
-            """
-            """
-            for line in range(len(df)):
-                for value in lista2 :
-                    mylist.set("item"+str(line),'fecha', value)
-            """
             #Realizar y vizualizar graficas
             def realizar_grafica():
                 frame4 = Frame(frame2,width=250, height=250)
                 frame4.grid(padx=10, pady=10, row=3, column=2)
-                namegraph= StringVar()
-                name_ejex= StringVar()
-                name_ejey=StringVar()
+                
+
                 Label(frame4, text="Parametros para realizar la grafica").grid(row=0, column=0)
                 Label(frame4, text="Titulo de la grafica").grid(row=1, column=0)
+                
                 titlegraph= Entry(frame4, textvariable=namegraph)
                 titlegraph.grid(ipadx=5, ipady=5, padx=5, pady=5, row=1, column=1)
+                
                 Label(frame4, text="Label para el eje x").grid(row=2, column=0)
                 ejex= Entry(frame4, textvariable=name_ejex)
                 ejex.grid(ipadx=5, ipady=5, padx=5, pady=5, row=2, column=1)
+                
                 Label(frame4, text="Label para e eje y").grid(row=3, column=0)
                 ejey= Entry(frame4, textvariable=name_ejey)
                 ejey.grid(ipadx=5, ipady=5, padx=5, pady=5, row=3, column=1)
-                Button(frame4,)
+                Button(frame4, text="Realizar Grafica", command=ver_grafica).grid(padx=5, pady=5, ipadx=5, ipady=5,row=4, column=0)
 
                 
 
@@ -157,8 +159,6 @@ def cargar_archivos():
     
     root.iconify()
 
-
-
 # ventana Inicio
 frame = Frame(root, width = 250, height = 250)
 frame.pack(fill = "both", expand = 1)
@@ -173,7 +173,6 @@ etiquetatitulo2.config(font=(20))
 etiquetatitulo2.pack(padx=5, pady = 5, ipadx=5,ipady=5)
 Button(frame, text="Iniciar", width=20, command=cargar_archivos).pack(padx=5, pady =10)
 Button(frame, text="Salir", width=20, command=salir).pack(padx=5, pady =10)
-
 
 root.mainloop()
 
