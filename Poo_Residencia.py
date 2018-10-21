@@ -1,9 +1,12 @@
 import tkinter as tk
 from tkinter import filedialog
 
+global ruta_new = opendialog
 
 
-
+def opendialog():
+    ruta=filedialog.askopenfilename(title='Seleccionar el archivo de informacion', filetypes=(("Archivos Data","*.dat"),("Todos los Archivos","*.*")))
+    return ruta
 
 class AnalisisClima(tk.Tk):
 
@@ -34,6 +37,7 @@ class AnalisisClima(tk.Tk):
 
         
         view= tk.Menu(menubar, tearoff=0)
+         view.add_command(label="Show Data")
         view.add_command(label="Show Graph")
         view.add_separator()
         view.add_command(label="EMD")
@@ -94,8 +98,7 @@ class Show_data(tk.Frame):
 
     def __init__(self, parent, controller):
         tk.Frame.__init__(self,parent)
-        ruta=filedialog.askopenfilename(title='Seleccionar el archivo de informacion', filetypes=(("Archivos Data","*.dat"),("Todos los Archivos","*.*")))
-        print(ruta)
+       
     
         
         
