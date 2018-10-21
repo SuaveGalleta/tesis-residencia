@@ -17,9 +17,8 @@ class AnalisisClima(tk.Tk):
         #Asignación del titulo de la ventana principal
         self.title("Analisis de Datos Climaticos")
         
-        me= Mis_metodos()
             
-        
+        """
         #Creacion del menu
         menubar = tk.Menu(container)
         tk.Tk.config(self, menu=menubar)
@@ -45,12 +44,12 @@ class AnalisisClima(tk.Tk):
         menubar.add_cascade(label="File", menu=filemenu)
         menubar.add_cascade(label="View", menu=view)
         menubar.add_cascade(label="Help", menu=ayuda)
-
+        """
 
         
         self.frames={}
 
-        for F in (Inicio, Show_data):
+        for F in (Inicio, Show_dialog):
 
         
             frame= F(container, self)
@@ -86,16 +85,25 @@ class Inicio(tk.Frame):
         welcome.pack(pady=5, padx=10,ipady=5, ipadx=10)
         maintitle=tk.Label(self, text="Analisis de datos climaticos", font=("Arial",25))
         maintitle.pack(pady=10, padx=10,ipady=5, ipadx=5)
+        boton_iniciar= tk.Button(self, text="Iniciar", command=lambda:controller.show_frame(Show_dialog))
+        boton_iniciar.pack(padx=5, pady =5, ipadx=5, ipady=5)
 
 
-class Show_data(tk.Frame):
+class Show_dialog(tk.Frame):
 
     def __init__(self, parent, controller):
         tk.Frame.__init__(self,parent)
+        volver= tk.Button(self, text="Volver", command=lambda:controller.show_frame(Inicio))
+        volver.grid(row=0, column=0, padx=15, pady =5, ipadx=5, ipady=5)
+        label = tk.Label(self, text="Seleccionar Archivo", font=("Arial", 20))
+        label.grid(row=0, column=1)
         me = Mis_metodos()
-        label = tk.Label(self, text=me.opendialog())
-        label.pack()    
-       
+        boton_select= tk.Button(self,text="Abrir Archivo", command=me.opendialog)    
+        boton_select.grid(row=1, column=1)
+        ver_ruta = tk.Label(self, text=me.opendialog) 
+        ver_ruta.grid(row=1, column=0)
+
+
 class Mis_metodos():
     
     def opendialog(self):
