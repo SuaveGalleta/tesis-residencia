@@ -1,12 +1,8 @@
 import tkinter as tk
 from tkinter import filedialog
 
-global ruta_new = opendialog
 
-
-def opendialog():
-    ruta=filedialog.askopenfilename(title='Seleccionar el archivo de informacion', filetypes=(("Archivos Data","*.dat"),("Todos los Archivos","*.*")))
-    return ruta
+#global ruta_new
 
 class AnalisisClima(tk.Tk):
 
@@ -21,23 +17,21 @@ class AnalisisClima(tk.Tk):
         #Asignación del titulo de la ventana principal
         self.title("Analisis de Datos Climaticos")
         
-
-    
+        me= Mis_metodos()
             
-
-
+        
         #Creacion del menu
         menubar = tk.Menu(container)
-        tk.Tk.config(self, menu=menubar)/
+        tk.Tk.config(self, menu=menubar)
         #Asigando las diferentes opciones del menu
         filemenu= tk.Menu(menubar, tearoff=0)
-        filemenu.add_command(label="Open File...", command=lambda:self.show_frame(Show_data))
+        filemenu.add_command(label="Open File...", command=lambda:me.opendialog())
         filemenu.add_separator()
         filemenu.add_command(label="Exit", command=self.quit)
 
         
         view= tk.Menu(menubar, tearoff=0)
-         view.add_command(label="Show Data")
+        view.add_command(label="Show Data", command=lambda:self.show_frame(Show_data))
         view.add_command(label="Show Graph")
         view.add_separator()
         view.add_command(label="EMD")
@@ -98,8 +92,16 @@ class Show_data(tk.Frame):
 
     def __init__(self, parent, controller):
         tk.Frame.__init__(self,parent)
+        me = Mis_metodos()
+        label = tk.Label(self, text=me.opendialog())
+        label.pack()    
        
+class Mis_metodos():
     
+    def opendialog(self):
+        ruta=filedialog.askopenfilename(title='Seleccionar el archivo de informacion', filetypes=(("Archivos Data","*.dat"),("Todos los Archivos","*.*")))
+        return ruta
+  
         
         
         
