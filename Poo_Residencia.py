@@ -11,6 +11,9 @@ from matplotlib.figure import Figure
 import matplotlib.animation as animation
 from matplotlib import	style
 from PyEMD import EMD
+import numpy as np
+import re
+import scipy.io
 
 
 #global ruta_new
@@ -36,7 +39,7 @@ class AnalisisClima(tk.Tk):
 
         self.frames={}
 
-        for F in (Inicio, Show_dialog, Show_data, Show_graph):
+        for F in (Inicio, Show_dialog, Show_data, Show_graph, Show_emd):
 
         
             frame= F(container, self)
@@ -52,10 +55,6 @@ class AnalisisClima(tk.Tk):
          
         frame = self.frames[cont]
         frame.tkraise()
-
-    
-  
-    
     
 
 #Ventana de inicio
@@ -78,9 +77,6 @@ class Inicio(tk.Frame):
         boton_salir.pack(padx=5, pady =5, ipadx=5, ipady=5)
 
 
-
-
-
 #ventana para seleccionar archivo
 class Show_dialog(tk.Frame):
 
@@ -91,6 +87,7 @@ class Show_dialog(tk.Frame):
         label = tk.Label(self, text="Seleccionar Archivo", font=("Arial", 20))
         label.grid(row=0, column=1)
 
+        #funcion para abrir ventana de seleccion del archivo
         def opendialog():
             #ruta.filename=filedialog.askdirectory()
             filename=filedialog.askopenfilename(title='Seleccionar el archivo de informacion', filetypes=(("Archivos Data","*.dat"),("Todos los Archivos","*.*")))   
@@ -107,13 +104,12 @@ class Show_dialog(tk.Frame):
         boton_select.grid(row=1, column=1, padx=5, pady =5, ipadx=5, ipady=5)
        
 
-
-
-
 #ventana para ver los datos
 class Show_data(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self,parent)
+        
+        #funcion para limpieza de datos y visualizaion de datos
         def ver():
 
             array1year=[]
@@ -142,6 +138,9 @@ class Show_data(tk.Frame):
             df.columns = [ "fecha", "valor"]
             global my_graph
             my_graph = df["valor"].astype(float)
+
+            global new_list
+            new_list = lista[1:]
         
             #creacion de la vista de los datos
             mylist = ttk.Treeview(self, columns=("valor"))            
@@ -172,16 +171,18 @@ class Show_data(tk.Frame):
 
         head=tk.Label(self,text="Visualizacion de los datos", font=("Arial", 20))
         head.pack()
+        #boton para desplegar datos
         boton_select= ttk.Button(self,text="Desplegar Tabla", command=ver) 
         boton_select.pack(padx=5, pady =5, ipadx=5, ipady=5)
         
 
-
+#ventana mostrar grafica
 class Show_graph(tk.Frame):
 
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
 
+        #Funcion para realizar la grafica
         def ver_grafica():
             a.plot(my_graph)
             a.set_title("ONI")
@@ -194,17 +195,64 @@ class Show_graph(tk.Frame):
             canvas.show()
             canvas.get_tk_widget().pack(side = tk.TOP, fill = tk.BOTH, expand = True)
 
-            ttk.Button(self,text="Aplicar EMD").pack(padx=5, pady =5, ipadx=5, ipady=5)
+            ttk.Button(self,text="Aplicar EMD", command=lambda:controller.show_frame(Show_emd)).pack(padx=5, pady =5, ipadx=5, ipady=5)
         
         tk.Label(self, text="Grafica", font=("Arial",20)).pack()
+        #boton desplegar la grafica
         ttk.Button(self,text="Desplegar grafica", command=ver_grafica).pack(padx=5, pady =5, ipadx=5, ipady=5)
 
 
+#ventana para ver el EMD
 class Show_emd(tk.Frame):
 
     def __init__(self, parent, controller):
         tk.Frame.__init__(self,parent)     
 
+        def desplegar_emd():
+
+            dataoni = []
+            for item in new_list:
+                dataoni.append(float(item))
+            x = np.linspace(0,10,623)
+            signal = np.array(dataoni)
+            emd = EMD()
+            IMFS = emd.emd(signal)
+            N = IMFS.shape[0]+1
+            funcion= tk.StringVar()
+            funcion.set("Seleccione la Descomposición")
+
+            opciones = []
+            for line in range(len(IMFS)):
+                opciones.append(line)
+                print (line)            
+            
+            dropselect = ttk.OptionMenu(self, funcion, *opciones)
+            dropselect.pack(padx=5, pady =5, ipadx=5, ipady=5)
+
+            def ver_dme():
+                seleccion= int(funcion.get())
+                a.clear()
+                a.plot(IMFS[seleccion])
+                canvas = FigureCanvasTkAgg(f, self)
+                canvas.show()
+                canvas.get_tk_widget().pack(side = tk.TOP, fill = tk.BOTH, expand = True)
+                
+
+            tk.Button(self, text="Desplegar grafica", command=ver_dme).pack()
+
+            #a.plot(IMFS[5])
+
+            #canvas = FigureCanvasTkAgg(f, self)
+            #canvas.show()
+            #canvas.get_tk_widget().pack(side = tk.TOP, fill = tk.BOTH, expand = True)
+            #for i, imf in enumerate(IMFS):
+                #tls.figure("DME")
+                #tls.subplot(N,1,i+2)
+                #tls.plot(x,imf, 'g')
+                #tls.title("IMF "+str(i+1))
+                #tls.xlabel("Time [s]")
+    
+        tk.Button(self, text="Desplegar DME", command=desplegar_emd).pack(padx=5, pady =5, ipadx=5, ipady=5)
 
 app= AnalisisClima()
 app.mainloop()
