@@ -174,5 +174,4 @@ etiquetatitulo2.pack(padx=5, pady = 5, ipadx=5,ipady=5)
 Button(frame, text="Iniciar", width=20, command=cargar_archivos).pack(padx=5, pady =10)
 Button(frame, text="Salir", width=20, command=salir).pack(padx=5, pady =10)
 
-root.mainloop()
-
+root.mainloop()      

@@ -76,6 +76,10 @@ class Inicio(tk.Frame):
         boton_iniciar.pack(padx=5, pady =5, ipadx=5, ipady=5)
         boton_salir =ttk.Button(self, text="Salir", command=self.quit, width=20)
         boton_salir.pack(padx=5, pady =5, ipadx=5, ipady=5)
+        filename=filedialog.askopenfilename(title='Seleccionar el archivo de informacion', filetypes=(("Archivos Data","*.dat"),("Todos los Archivos","*.*")))   
+        global path2
+        path2=filename
+        print(path2)
 
 
 #ventana para seleccionar archivo
@@ -90,15 +94,15 @@ class Show_dialog(tk.Frame):
        
 
         #funcion para abrir ventana de seleccion del archivo
-        def opendialog():
-            #ruta.filename=filedialog.askdirectory()
-            filename=filedialog.askopenfilename(title='Seleccionar el archivo de informacion', filetypes=(("Archivos Data","*.dat"),("Todos los Archivos","*.*")))   
-            messagebox.showinfo("Archivo Seleccionado", "Archivo Seleccionado Correctamente")
-            global path
-            path=filename
-            mi_ruta.config(text=filename)
-            abrir_archivo = ttk.Button(self, text="Ver Archivo", command=lambda:controller.show_frame(Show_data), state='enabled')
-            abrir_archivo.grid(row=1, column=2, padx=5, pady =5, ipadx=5, ipady=5)
+        #def opendialog():
+        #    #ruta.filename=filedialog.askdirectory()
+        #    filename=filedialog.askopenfilename(title='Seleccionar el archivo de informacion', filetypes=(("Archivos Data","*.dat"),("Todos los Archivos","*.*")))   
+        #    messagebox.showinfo("Archivo Seleccionado", "Archivo Seleccionado Correctamente")
+        #    global path
+        #    path=filename
+        #    mi_ruta.config(text=filename)
+        #    abrir_archivo = ttk.Button(self, text="Ver Archivo", command=lambda:controller.show_frame(Show_data), state='enabled')
+        #    abrir_archivo.grid(row=1, column=2, padx=5, pady =5, ipadx=5, ipady=5)
             
            
        
@@ -106,12 +110,12 @@ class Show_dialog(tk.Frame):
            
        
        
-        mi_ruta=tk.Label(self, text="Ningun Archivo Seleccionado")
+        mi_ruta=tk.Label(self, text=path2)
         mi_ruta.grid(row=3, column=0, columnspan=3,padx=5, pady =5, ipadx=5, ipady=5)
-        abrir_archivo = ttk.Button(self, text="Ver Archivo", command=lambda:controller.show_frame(Show_data), state='disabled')
+        abrir_archivo = ttk.Button(self, text="Ver Archivo", command=lambda:controller.show_frame(Show_data), state='enabled')
         abrir_archivo.grid(row=1, column=2, padx=5, pady =5, ipadx=5, ipady=5)
-        boton_select= ttk.Button(self,text="Abrir Archivo", command=opendialog) 
-        boton_select.grid(row=1, column=1, padx=5, pady =5, ipadx=5, ipady=5)
+        #boton_select= ttk.Button(self,text="Abrir Archivo", command=opendialog) 
+        #boton_select.grid(row=1, column=1, padx=5, pady =5, ipadx=5, ipady=5)
        
 
 #ventana para ver los datos
@@ -120,69 +124,7 @@ class Show_data(tk.Frame):
         tk.Frame.__init__(self,parent)
         
         #funcion para limpieza de datos y visualizaion de datos
-        def ver():
-
-            array1year=[]
-            array1month=[]
-            array2=[]
-            #limpieza de datos
-            for line in open(path):
-                array1year.append(line[0:4])
-                array1month.append(line[4:6])
-                if line[7]=='-':
-                    array2.append(line[7:])
-                    
-                else:
-                    array2.append(line[7:])
-                    
-                    
-  
-            lista = []
-            lista2 = []
-            listaGeneral = []
-            for valor in array2:
-                lista.append(valor.rstrip('\n'))
-                #print(lista)          
-            for sal in range(len(lista)):
-                lista2.append(array1year[sal] +'-'+array1month[sal])
-                #print(lista2)
-            #creación del dataframe
-            
-            listaGeneral = dict(zip(lista2[1:], lista[1:]))
-            tupla = listaGeneral.items()
-            df = pd.DataFrame(list(tupla))
-            df.columns = [ "fecha", "valor"]
-            global my_graph
-            my_graph = df["valor"].astype(float)
-
-            global new_list
-            new_list = lista[1:]
         
-            #creacion de la vista de los datos
-            mylist = ttk.Treeview(self, columns=("valor"))            
-            barra = tk.Scrollbar(self, command=mylist.yview)
-            barra.pack( side = tk.RIGHT, fill = tk.Y )
-            mylist.configure(yscrollcommand=barra.set)
-            mylist.pack()
-            
-            
-            mylist.heading("#0",text="Fecha")
-            mylist.heading("valor",text="Valor")
-            x=-1
-            y=-1
-            #Mostrar fechas en el treeview
-            for num in df["fecha"]:
-                x = x+1
-                mylist.insert('','end', "item"+str(x) ,text=num)
-
-            #mostrar su respectivo valor
-            for value in df["valor"]:
-                y=y+1
-                mylist.set("item"+str(y),'valor', value)
-
-              
-        
-
         head=tk.Label(self,text="Visualizacion de los datos", font=("Arial", 20))
         head.pack(padx=5, pady =5, ipadx=5, ipady=5)
         framebotones=tk.Frame(self)
@@ -191,11 +133,75 @@ class Show_data(tk.Frame):
         boton_regresar= ttk.Button(framebotones, text="Volver", command=lambda:controller.show_frame(Show_dialog))
         boton_regresar.grid(row=0, column=0, padx=5, pady =5, ipadx=5, ipady=5)
         #boton para desplegar datos
-        boton_select= ttk.Button(framebotones,text="Desplegar Tabla", command=ver) 
-        boton_select.grid(row=0,column=1,padx=5, pady =5, ipadx=5, ipady=5)
+        #boton_select= ttk.Button(framebotones,text="Desplegar Tabla", command=ver) 
+        #boton_select.grid(row=0,column=1,padx=5, pady =5, ipadx=5, ipady=5)
         #boton ver grafica
         boton_grafica = ttk.Button(framebotones, text="Ver grafica", command=lambda:controller.show_frame(Show_graph))
         boton_grafica.grid(row=0, column=2,padx=5, pady =5, ipadx=5, ipady=5) 
+
+
+        array1year=[]
+        array1month=[]
+        array2=[]
+        #limpieza de datos
+        for line in open(path2):
+            array1year.append(line[0:4])
+            array1month.append(line[4:6])
+            if line[7]=='-':
+                array2.append(line[7:])
+                    
+            else:
+                array2.append(line[7:])
+                    
+                    
+  
+        lista = []
+        lista2 = []
+        listaGeneral = []
+        for valor in array2:
+            lista.append(valor.rstrip('\n'))
+            #print(lista)          
+        for sal in range(len(lista)):
+            lista2.append(array1year[sal] +'-'+array1month[sal])
+            #print(lista2)
+        #creación del dataframe
+            
+        listaGeneral = dict(zip(lista2[1:], lista[1:]))
+        tupla = listaGeneral.items()
+        df = pd.DataFrame(list(tupla))
+        df.columns = [ "fecha", "valor"]
+        global my_graph
+        my_graph = df["valor"].astype(float)
+
+        global new_list
+        new_list = lista[1:]
+        
+        #creacion de la vista de los datos
+        mylist = ttk.Treeview(self, columns=("valor"))            
+        barra = tk.Scrollbar(self, command=mylist.yview)
+        barra.pack( side = tk.RIGHT, fill = tk.Y )
+        mylist.configure(yscrollcommand=barra.set)
+        mylist.pack()
+            
+            
+        mylist.heading("#0",text="Fecha")
+        mylist.heading("valor",text="Valor")
+        x=-1
+        y=-1
+        #Mostrar fechas en el treeview
+        for num in df["fecha"]:
+            x = x+1
+            mylist.insert('','end', "item"+str(x) ,text=num)
+
+        #mostrar su respectivo valor
+        for value in df["valor"]:
+            y=y+1
+            mylist.set("item"+str(y),'valor', value)
+
+              
+        
+
+     
         
 
 #ventana mostrar grafica
@@ -208,58 +214,14 @@ class Show_graph(tk.Frame):
         frame_bonito = tk.Frame(self)
         frame_bonito.pack()
         
-        
-        
         canvas = FigureCanvasTkAgg(f, self)
         #Funcion para realizar la grafica
-        def ver_grafica():
-
-            array1year=[]
-            array1month=[]
-            array2=[]
-            #limpieza de datos
-            for line in open(path):
-                array1year.append(line[0:4])
-                array1month.append(line[4:6])
-                if line[7]=='-':
-                    array2.append(line[7:])
-                    
-                else:
-                    array2.append(line[7:])
-                    
-                    
-  
-            lista = []
-            lista2 = []
-            listaGeneral = []
-            for valor in array2:
-                lista.append(valor.rstrip('\n'))
-                #print(lista)          
-            for sal in range(len(lista)):
-                lista2.append(array1year[sal] +'-'+array1month[sal])
-                #print(lista2)
-            #creación del dataframe
-            
-            listaGeneral = dict(zip(lista2[1:], lista[1:]))
-            tupla = listaGeneral.items()
-            df = pd.DataFrame(list(tupla))
-            df.columns = [ "fecha", "valor"]
-            global my_graph
-            my_graph = df["valor"].astype(float)
-
-            global new_list
-            new_list = lista[1:]
-        
-           
-
-            a.plot(my_graph)
+        a.plot(my_graph)
             
          
-            canvas.show()
-            canvas.get_tk_widget().pack(side = tk.TOP, fill = tk.BOTH, expand = True)
-            limpieza=ttk.Button(frame_bonito, text="Limpiar Pantalla", command=limpiar, state='enabled')
-            limpieza.grid(row=0, column=2,padx=5, pady =5, ipadx=5, ipady=5)
-           
+        canvas.show()
+        canvas.get_tk_widget().pack(side = tk.TOP, fill = tk.BOTH, expand = True)
+             
         
         #boton regresar
         boton_regresar= ttk.Button(frame_bonito, text="Volver", command=lambda:controller.show_frame(Show_data))
@@ -267,18 +229,7 @@ class Show_graph(tk.Frame):
 
         #boton desplegar la grafica
         
-        ttk.Button(frame_bonito,text="Desplegar grafica", command=ver_grafica).grid(row=0, column= 1,padx=5, pady =5, ipadx=5, ipady=5)
 
-        #funcion limpiar pantalla (canvas)
-        def limpiar():
-            canvas.get_tk_widget().destroy()
-            limpieza=ttk.Button(frame_bonito, text="Limpiar Pantalla", command=limpiar, state='disabled')
-            limpieza.grid(row=0, column=2,padx=5, pady =5, ipadx=5, ipady=5)
-            
-
-
-        limpieza=ttk.Button(frame_bonito, text="Limpiar Pantalla", command=limpiar, state='disabled')
-        limpieza.grid(row=0, column=2,padx=5, pady =5, ipadx=5, ipady=5)
         ttk.Button(frame_bonito,text="Aplicar EMD", command=lambda:controller.show_frame(Show_emd)).grid(row=0, column= 3,padx=5, pady =5, ipadx=5, ipady=5)
 
 
@@ -386,4 +337,3 @@ class Show_emd(tk.Frame):
 
 app= AnalisisClima()
 app.mainloop()
-

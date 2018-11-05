@@ -65,19 +65,20 @@ x = np.linspace(0, 10, 623)
 signal = np.array(data_oni)
 emd = EMD()
 IMFS = emd.emd(signal)
-#print(len(IMFS))
+print(IMFS[2])
 N = IMFS.shape[0]+1
 
+"""
 for i, imf in enumerate(IMFS):
     tls.figure("DME")
     tls.subplot(N,1,i+2)
     tls.plot(x,imf, 'g')
     tls.title("IMF "+str(i+1))
     tls.xlabel("Time [s]")
-
+"""
 
 tls.show()
 
 
-
+  
 
