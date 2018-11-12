@@ -15,6 +15,7 @@ import numpy as np
 import re
 import scipy.io
 from tkinter import simpledialog
+import os
 
 
 #global ruta_new
@@ -250,9 +251,13 @@ class Show_graph(tk.Frame):
             global new_list
             new_list = lista[1:]
         
-           
+            file_name = os.path.basename(path)
+            index_of_dot = file_name.index('.')
+            file_name_without_extension = file_name[:index_of_dot]
+            #print (file_name_without_extension)
 
             a.plot(my_graph)
+            a.set_title(file_name_without_extension)
             
          
             canvas.show()
@@ -347,12 +352,15 @@ class Show_emd(tk.Frame):
 
             ttk.Button(parejo, text="Desplegar DME", command=desplegar_emd, state='disabled').grid(row=0,column=1,padx=5, pady =5, ipadx=5, ipady=5)
 
-         
+
+           
+
             
             def ver_dme():
+                global seleccion
                 seleccion= int(funcion.get())
                 global my_canvas           
-                a.clear()            
+                a.clear()        
                 a.plot(IMFS[seleccion])
                 a.set_title("IMF "+str(seleccion))
                 a.set_xlabel("Tiempo [s]")
@@ -360,18 +368,36 @@ class Show_emd(tk.Frame):
                 canvas2.show()
                 canvas2.get_tk_widget().pack(side = tk.TOP, fill = tk.BOTH, expand = True)
                 my_canvas = canvas2
+           
+
+            def prueba():
+                file_name = os.path.basename(path)
+                index_of_dot = file_name.index('.')
+                file_name_without_extension = file_name[:index_of_dot]
+                #print (file_name_without_extension)
+                global mycanvas3
+                a.clear()
+                a.plot(IMFS[seleccion])
+                a.plot(my_graph)
+                a.set_title(file_name_without_extension + " y " + "IMF "+str(seleccion) )
+                canvas3 = FigureCanvasTkAgg(f, self)
+                canvas3.show()
+                canvas3.get_tk_widget().pack(side = tk.TOP, fill = tk.BOTH, expand = True)
+                mycanvas3 = canvas3
+            
+            
             def clear2():
-                my_canvas.get_tk_widget().destroy()    
- 
-                
+                my_canvas.get_tk_widget().destroy()
+                mycanvas3.get_tk_widget().destroy()      
             
             
                 
-               
+            
             my_frame_grid=tk.Frame(self)
             my_frame_grid.pack() 
             ttk.Button(my_frame_grid, text="Desplegar grafica", command=ver_dme).grid(row=0, column=0,padx=5, pady =5, ipadx=5, ipady=5)
             ttk.Button(my_frame_grid, text="Limpiar Pantalla", command=clear2).grid(row=0, column=1,padx=5, pady =5, ipadx=5, ipady=5)
+            ttk.Button(my_frame_grid, text="Comparacion con los datos", command=prueba).grid(row=0, column=2,padx=5, pady =5, ipadx=5, ipady=5)
             
 
         parejo=tk.Frame(self)

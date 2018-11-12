@@ -242,93 +242,91 @@ class Show_emd(tk.Frame):
         tk.Label(self, text="Descompoición Modal Empirica",font=("Arial", 20)).pack(padx=5, pady =5, ipadx=5, ipady=5) 
         
 
-        def desplegar_emd():
-            array1year=[]
-            array1month=[]
-            array2=[]
-            #limpieza de datos
-            for line in open(path):
-                array1year.append(line[0:4])
-                array1month.append(line[4:6])
-                if line[7]=='-':
-                    array2.append(line[7:])
+        array1year=[]
+        array1month=[]
+        array2=[]
+        #limpieza de datos
+        for line in open(path2):
+            array1year.append(line[0:4])
+            array1month.append(line[4:6])
+            if line[7]=='-':
+                array2.append(line[7:])
                     
-                else:
-                    array2.append(line[7:])
+            else:
+                array2.append(line[7:])
                     
                     
   
-            lista = []
-            lista2 = []
-            listaGeneral = []
-            for valor in array2:
-                lista.append(valor.rstrip('\n'))
-                #print(lista)          
-            for sal in range(len(lista)):
-                lista2.append(array1year[sal] +'-'+array1month[sal])
-                #print(lista2)
+        lista = []
+        lista2 = []
+        listaGeneral = []
+        for valor in array2:
+            lista.append(valor.rstrip('\n'))
+            #print(lista)          
+        for sal in range(len(lista)):
+            lista2.append(array1year[sal] +'-'+array1month[sal])
+            #print(lista2)
             #creación del dataframe
             
-            listaGeneral = dict(zip(lista2[1:], lista[1:]))
-            tupla = listaGeneral.items()
-            df = pd.DataFrame(list(tupla))
-            df.columns = [ "fecha", "valor"]
-            global my_graph
-            my_graph = df["valor"].astype(float)
+        listaGeneral = dict(zip(lista2[1:], lista[1:]))
+        tupla = listaGeneral.items()
+        df = pd.DataFrame(list(tupla))
+        df.columns = [ "fecha", "valor"]
+        global my_graph
+        my_graph = df["valor"].astype(float)
 
-            global new_list
-            new_list = lista[1:]
+        global new_list
+        new_list = lista[1:]
 
-            dataoni = []
-            for item in new_list:
-                dataoni.append(float(item))
-            signal = np.array(dataoni)
-            emd = EMD()
-            IMFS = emd.emd(signal)
-            funcion= tk.StringVar()
-            funcion.set("Seleccione la Descomposición")
+        dataoni = []
+        for item in new_list:
+            dataoni.append(float(item))
+        signal = np.array(dataoni)
+        emd = EMD()
+        IMFS = emd.emd(signal)
+        funcion= tk.StringVar()
+        funcion.set("Seleccione la Descomposición")
 
-            opciones = []
-            for line in range(len(IMFS)):
-                opciones.append(line)
-                #print (line)            
+        opciones = []
+        for line in range(len(IMFS)):
+            opciones.append(line)
+            #print (line)            
             
-            dropselect = ttk.OptionMenu(self, funcion, *opciones)
-            dropselect.pack(padx=5, pady =5, ipadx=5, ipady=5)
+        dropselect = ttk.OptionMenu(self, funcion, *opciones)
+        dropselect.pack(padx=5, pady =5, ipadx=5, ipady=5)
 
-            ttk.Button(parejo, text="Desplegar DME", command=desplegar_emd, state='disabled').grid(row=0,column=1,padx=5, pady =5, ipadx=5, ipady=5)
 
          
             
-            def ver_dme():
-                seleccion= int(funcion.get())
-                global my_canvas           
-                a.clear()            
-                a.plot(IMFS[seleccion])
-                a.set_title("IMF "+str(seleccion))
-                a.set_xlabel("Tiempo [s]")
-                canvas2 = FigureCanvasTkAgg(f, self)
-                canvas2.show()
-                canvas2.get_tk_widget().pack(side = tk.TOP, fill = tk.BOTH, expand = True)
-                my_canvas = canvas2
-            def clear2():
-                my_canvas.get_tk_widget().destroy()    
+        def ver_dme():
+            seleccion= int(funcion.get())
+            global my_canvas           
+            a.clear()            
+            a.plot(IMFS[seleccion])
+            a.set_title("IMF "+str(seleccion))
+            a.set_xlabel("Tiempo [s]")
+            canvas2 = FigureCanvasTkAgg(f, self)
+            canvas2.show()
+            canvas2.get_tk_widget().pack(side = tk.TOP, fill = tk.BOTH, expand = True)
+            my_canvas = canvas2
+        def clear2():
+            my_canvas.get_tk_widget().destroy()    
  
                 
             
             
                 
                
-            my_frame_grid=tk.Frame(self)
-            my_frame_grid.pack() 
-            ttk.Button(my_frame_grid, text="Desplegar grafica", command=ver_dme).grid(row=0, column=0,padx=5, pady =5, ipadx=5, ipady=5)
-            ttk.Button(my_frame_grid, text="Limpiar Pantalla", command=clear2).grid(row=0, column=1,padx=5, pady =5, ipadx=5, ipady=5)
+        my_frame_grid=tk.Frame(self)
+        my_frame_grid.pack() 
+        ttk.Button(my_frame_grid, text="Desplegar grafica", command=ver_dme).grid(row=0, column=0,padx=5, pady =5, ipadx=5, ipady=5)
+        ttk.Button(my_frame_grid, text="Limpiar Pantalla", command=clear2).grid(row=0, column=1,padx=5, pady =5, ipadx=5, ipady=5)
             
 
         parejo=tk.Frame(self)
         parejo.pack()
         ttk.Button(parejo, text="Volver", command=lambda:controller.show_frame(Show_graph)).grid(row=0, column=0,padx=5, pady =5, ipadx=5, ipady=5)
-        ttk.Button(parejo, text="Desplegar DME", command=desplegar_emd).grid(row=0, column=1,padx=5, pady =5, ipadx=5, ipady=5)
+        
     
 
 

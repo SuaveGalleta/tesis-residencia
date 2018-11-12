@@ -12,6 +12,7 @@ import pandas as pd
 import matplotlib.pyplot as tls
 import scipy.io
 from PyEMD import EMD
+import sympy as sy
 
 #limpieza de datos a graficar
 
@@ -65,7 +66,7 @@ x = np.linspace(0, 10, 623)
 signal = np.array(data_oni)
 emd = EMD()
 IMFS = emd.emd(signal)
-print(IMFS[2])
+#print(IMFS[2])
 N = IMFS.shape[0]+1
 
 """
@@ -76,8 +77,9 @@ for i, imf in enumerate(IMFS):
     tls.title("IMF "+str(i+1))
     tls.xlabel("Time [s]")
 """
-
-tls.show()
+#restar las descomposiciones para obtener las derivadas 
+print(deri)
+#tls.show()
 
 
   
