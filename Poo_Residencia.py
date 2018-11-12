@@ -16,6 +16,7 @@ import re
 import scipy.io
 from tkinter import simpledialog
 import os
+import random
 
 
 #global ruta_new
@@ -211,7 +212,7 @@ class Show_graph(tk.Frame):
         
         
         
-        canvas = FigureCanvasTkAgg(f, self)
+       
         #Funcion para realizar la grafica
         def ver_grafica():
 
@@ -229,7 +230,7 @@ class Show_graph(tk.Frame):
                     array2.append(line[7:])
                     
                     
-  
+    
             lista = []
             lista2 = []
             listaGeneral = []
@@ -255,11 +256,13 @@ class Show_graph(tk.Frame):
             index_of_dot = file_name.index('.')
             file_name_without_extension = file_name[:index_of_dot]
             #print (file_name_without_extension)
-
+            a.clear
             a.plot(my_graph)
             a.set_title(file_name_without_extension)
-            
-         
+            a.set_ylabel(lista[0])
+            a.set_xlabel("Dato")            
+            global canvas
+            canvas = FigureCanvasTkAgg(f, self)
             canvas.show()
             canvas.get_tk_widget().pack(side = tk.TOP, fill = tk.BOTH, expand = True)
             limpieza=ttk.Button(frame_bonito, text="Limpiar Pantalla", command=limpiar, state='enabled')
@@ -277,9 +280,10 @@ class Show_graph(tk.Frame):
         #funcion limpiar pantalla (canvas)
         def limpiar():
             canvas.get_tk_widget().destroy()
+            a.clear()
             limpieza=ttk.Button(frame_bonito, text="Limpiar Pantalla", command=limpiar, state='disabled')
             limpieza.grid(row=0, column=2,padx=5, pady =5, ipadx=5, ipady=5)
-            
+          
 
 
         limpieza=ttk.Button(frame_bonito, text="Limpiar Pantalla", command=limpiar, state='disabled')
@@ -387,8 +391,10 @@ class Show_emd(tk.Frame):
             
             
             def clear2():
+                
                 my_canvas.get_tk_widget().destroy()
-                mycanvas3.get_tk_widget().destroy()      
+                mycanvas3.get_tk_widget().destroy() 
+                a.clear()     
             
             
                 
