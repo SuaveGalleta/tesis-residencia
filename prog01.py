@@ -67,7 +67,7 @@ signal = np.array(data_oni)
 emd = EMD()
 IMFS = emd.emd(signal)
 #print(IMFS[2])
-N = IMFS.shape[0]+1
+#N = IMFS.shape[0]+1
 
 """
 for i, imf in enumerate(IMFS):
@@ -77,8 +77,40 @@ for i, imf in enumerate(IMFS):
     tls.title("IMF "+str(i+1))
     tls.xlabel("Time [s]")
 """
-#restar las descomposiciones para obtener las derivadas 
-print(deri)
+
+#apartado de las derivadas
+#print(IMFS[3])
+#resta consecutiva para sacar derivadas
+#arracero= [0]
+#reversearray= np.append(reversearray,arracero)
+
+def derivadas(dme):
+    derivada = []
+    reversearray = dme[::-1]
+    for line in range(len(reversearray)-1):
+        operacion = reversearray[line]-reversearray[line+1]
+        derivada.append(operacion)
+        mi_derivada = derivada[::-1]
+    
+    return mi_derivada
+
+#for line in range(len(reversearray)-1):
+    #operacion  = reversearray[line]-reversearray[line+1]
+    #nuevoarray.append(operacion)
+
+#print(nuevoarray)
+
+#primera derivada
+arrayemd = IMFS[3]
+nuevoarray =[]
+#reversearray = arrayemd[::-1]
+primeraderi = derivadas(arrayemd)
+#print(primeraderi)
+
+
+#segunda derivada
+segundaderi = derivadas(primeraderi)
+#print(segundaderi)
 #tls.show()
 
 
