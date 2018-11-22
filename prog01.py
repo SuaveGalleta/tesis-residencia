@@ -90,7 +90,10 @@ def derivadas(dme):
     for line in range(len(reversearray)-1):
         operacion = reversearray[line]-reversearray[line+1]
         derivada.append(operacion)
-        mi_derivada = derivada[::-1]
+    
+    derivada.append(derivada[0])
+    mi_derivada = derivada[::-1]
+    
     
     return mi_derivada
 
@@ -105,7 +108,7 @@ arrayemd = IMFS[3]
 nuevoarray =[]
 #reversearray = arrayemd[::-1]
 primeraderi = derivadas(arrayemd)
-#print(primeraderi)
+print(primeraderi)
 
 
 #segunda derivada
