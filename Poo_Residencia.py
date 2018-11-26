@@ -183,8 +183,8 @@ class Show_data(tk.Frame):
             mylist.pack()
             
             
-            mylist.heading("#0",text="Fecha")
-            mylist.heading("valor",text="Valor")
+            mylist.heading("#0",text=lista2[0])
+            mylist.heading("valor",text=lista[0])
             x=-1
             y=-1
             #Mostrar fechas en el treeview
@@ -505,14 +505,28 @@ class Show_emd(tk.Frame):
                     for widget in frametodo.winfo_children():
                         widget.destroy()
                     messagebox.showinfo("Correcto", "Archivo Guardado con exito")
+                    """
                     with open('DME '+my_dme+'.csv', 'w') as f:
                         thewritter = csv.writer(f)
                         posicion=0
-                        thewritter.writerow(["Posicion" , "IMFS "+my_dme])
+                        thewritter.writerow(["Posicion"+"   " , "IMFS "+my_dme])
                         for i in IMFS[int(my_dme)]:
                             posicion=posicion+1
-                            thewritter.writerow([posicion , i])
-
+                            pos = str(posicion)
+                            new_pos = pos.zfill(4)
+                            new_pos = pos.rjust(4,'0')
+                            thewritter.writerow([new_pos+"  ", i])
+                    """
+                    with open('DME '+my_dme+'.dat', 'w') as f:
+                        f.write("Pos    IMFS "+my_dme+"\n")
+                        posicion=0
+                        for i in IMFS[int(my_dme)]:
+                            posicion=posicion+1
+                            pos = str(posicion)
+                            new_pos = pos.zfill(4)
+                            new_pos = pos.rjust(4,'0')
+                            f.writelines(new_pos+"    "+str(i)+"\n")
+                        f.close()
                         
             
             my_frame_grid=tk.Frame(self)
