@@ -86,12 +86,25 @@ class Show_dialog(tk.Frame):
 
     def __init__(self, parent, controller):
         tk.Frame.__init__(self,parent)
-        label = tk.Label(self, text="Seleccionar Archivo", font=("Arial", 20))
+
+        def forzar():
+            abrir_archivo = ttk.Button(framedialog, text="Ver Archivo Seleccionado", command=lambda:controller.show_frame(Show_data), state='disabled')
+            abrir_archivo.grid(row=0, column=1, padx=5, pady =5, ipadx=5, ipady=5)
+            controller.show_frame(Inicio)
+            mi_ruta=tk.Label(framelabel, text="Ningun Archivo Seleccionado")
+            mi_ruta.grid(row=0, column=1,padx=5, pady =5, ipadx=5, ipady=5)
+
+
+
+        volver= ttk.Button(self, text="Volver", command=forzar)
+        volver.pack(padx=15, pady =5, ipadx=5, ipady=5)
+        label = tk.Label(self, text="Abrir Archivo", font=("Arial", 20))
         label.pack(padx=5, pady =5, ipadx=5, ipady=5)
         framedialog = tk.Frame(self)
         framedialog.pack()
-        volver= ttk.Button(framedialog, text="Volver", command=lambda:controller.show_frame(Inicio))
-        volver.grid(row=0, column=0, padx=15, pady =5, ipadx=5, ipady=5)
+        framelabel = tk.Frame(self)
+        framelabel.pack()
+    
  
        
 
@@ -102,37 +115,51 @@ class Show_dialog(tk.Frame):
             #messagebox.showinfo("Archivo Seleccionado", "Archivo Seleccionado Correctamente")
             global path
             path=filename
-           
+
             if(path == "" or not path):
                 messagebox.showerror("Error", "Selecciones un archivo para continuar")
+                abrir_archivo = ttk.Button(framedialog, text="Ver Archivo Seleccionado", command=lambda:controller.show_frame(Show_data), state='disabled')
+                abrir_archivo.grid(row=0, column=1, padx=5, pady =5, ipadx=5, ipady=5)
+                mi_ruta.config(text="Ningun Archivo Seleccionado")
+
+                #mi_ruta=tk.Label(framelabel, text="Ningun Archivo Seleccionado")
+                #mi_ruta.grid(row=0, column=1,padx=5, pady =5, ipadx=5, ipady=5)
             else:
-                controller.show_frame(Show_data)
-                abrir_archivo = ttk.Button(framedialog, text="Ver Archivo", command=lambda:controller.show_frame(Show_data), state='enabled')
-                abrir_archivo.grid(row=0, column=2, padx=5, pady =5, ipadx=5, ipady=5)
-                mi_ruta.config(text=filename)
+
+                file_name = os.path.basename(path)
+                mi_ruta.config(text=file_name)
+                abrir_archivo = ttk.Button(framedialog, text="Ver Archivo Seleccionado", command=lambda:controller.show_frame(Show_data), state='enabled')
+                abrir_archivo.grid(row=0, column=1, padx=5, pady =5, ipadx=5, ipady=5)
+           
+            
             
            
            
        
         
            
+
+        label_title = tk.Label(framelabel, text="Archivo Seleccionado: ")
+        label_title.grid(row=0, column=0,padx=5, pady =5, ipadx=5, ipady=5)
+               
+        mi_ruta=tk.Label(framelabel, text="Ningun Archivo Seleccionado")
+        mi_ruta.grid(row=0, column=1,padx=5, pady =5, ipadx=5, ipady=5)
+
        
-       
-        mi_ruta=tk.Label(self, text="Ningun Archivo Seleccionado")
-        mi_ruta.pack(padx=5, pady =5, ipadx=5, ipady=5)
         
 
 
-        abrir_archivo = ttk.Button(framedialog, text="Ver Archivo", command=lambda:controller.show_frame(Show_data), state='disabled')
-        abrir_archivo.grid(row=0, column=2, padx=5, pady =5, ipadx=5, ipady=5)
-        boton_select= ttk.Button(framedialog,text="Abrir Archivo", command=opendialog) 
-        boton_select.grid(row=0, column=1, padx=5, pady =5, ipadx=5, ipady=5)
+        abrir_archivo = ttk.Button(framedialog, text="Ver Archivo Seleccionado", command=lambda:controller.show_frame(Show_data), state='disabled')
+        abrir_archivo.grid(row=0, column=1, padx=5, pady =5, ipadx=5, ipady=5)
+        boton_select= ttk.Button(framedialog,text="Seleccionar Archivo", command=opendialog) 
+        boton_select.grid(row=0, column=0, padx=5, pady =5, ipadx=5, ipady=5)
        
 
 #ventana para ver los datos
 class Show_data(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self,parent)
+        framedme = tk.Frame(self)
         frametree = tk.Frame(self)
         #funcion para limpieza de datos y visualizaion de datos
         def ver():
@@ -207,6 +234,7 @@ class Show_data(tk.Frame):
         head.pack(padx=5, pady =5, ipadx=5, ipady=5)
         framebotones=tk.Frame(self)
         framebotones.pack(padx=5, pady =5, ipadx=5, ipady=5)
+        framedme.pack()
         frametree.pack()
         #boton regresar
         def regresar():
@@ -227,6 +255,7 @@ class Show_data(tk.Frame):
         def ver_grafica():
             for widget in frametree.winfo_children():
                 widget.destroy()
+          
             array1year=[]
             array1month=[]
             array2=[]
@@ -267,7 +296,7 @@ class Show_data(tk.Frame):
             index_of_dot = file_name.index('.')
             file_name_without_extension = file_name[:index_of_dot]
             #print (file_name_without_extension)
-            a.clear
+            a.clear()
             a.plot(my_graph)
             a.set_title(file_name_without_extension)
             a.set_ylabel(lista[0])
@@ -287,8 +316,63 @@ class Show_data(tk.Frame):
             controller.show_frame(Show_emd)
             for widget in frametree.winfo_children():
                 widget.destroy()
+        
 
-        ttk.Button(framebotones,text="Aplicar DME" ,command=aplicar).grid(row=0, column=3,padx=5, pady =5, ipadx=5, ipady=5)
+        def ver_dme():
+            array1year=[]
+            array1month=[]
+            array2=[]
+            #limpieza de datos
+            for line in open(path):
+                array1year.append(line[0:4])
+                array1month.append(line[4:6])
+                if line[7]=='-':
+                    array2.append(line[7:])
+                    
+                else:
+                    array2.append(line[7:])
+                    
+                    
+  
+            lista = []
+            lista2 = []
+            listaGeneral = []
+            for valor in array2:
+                lista.append(valor.rstrip('\n'))
+                #print(lista)          
+            for sal in range(len(lista)):
+                lista2.append(array1year[sal] +'-'+array1month[sal])
+                #print(lista2)
+            #creación del dataframe
+            
+            listaGeneral = dict(zip(lista2[1:], lista[1:]))
+            tupla = listaGeneral.items()
+            df = pd.DataFrame(list(tupla))
+            df.columns = [ "fecha", "valor"]
+            global my_graph
+            my_graph = df["valor"].astype(float)
+
+            global new_list
+            new_list = lista[1:]
+
+            dataoni = []
+            for item in new_list:
+                dataoni.append(float(item))
+            signal = np.array(dataoni)
+            emd = EMD()
+            IMFS = emd.emd(signal)
+            funcion= tk.StringVar(framedme)
+            funcion.set("Seleccione la Descomposición")
+
+            opciones = []
+            for line in range(len(IMFS)):
+                opciones.append(line)
+                #print (line)            
+            global dropselect
+            dropselect = ttk.OptionMenu(framedme, funcion, *opciones)
+            dropselect.pack(padx=5, pady =5, ipadx=5, ipady=5)
+
+        ttk.Button(framebotones,text="Aplicar DME" ,command=ver_dme).grid(row=0, column=3,padx=5, pady =5, ipadx=5, ipady=5)
         
 """
 #ventana mostrar grafica
@@ -390,7 +474,8 @@ class Show_emd(tk.Frame):
 
         tk.Label(self, text="Descomposición Modal Empírica",font=("Arial", 20)).pack(padx=5, pady =5, ipadx=5, ipady=5) 
         
-
+        selectframe = tk.Frame(self)
+        my_frame_grid=tk.Frame(self)
         def desplegar_emd():
             array1year=[]
             array1month=[]
@@ -434,7 +519,7 @@ class Show_emd(tk.Frame):
             signal = np.array(dataoni)
             emd = EMD()
             IMFS = emd.emd(signal)
-            funcion= tk.StringVar(self)
+            funcion= tk.StringVar(selectframe)
             funcion.set("Seleccione la Descomposición")
 
             opciones = []
@@ -442,7 +527,7 @@ class Show_emd(tk.Frame):
                 opciones.append(line)
                 #print (line)            
             global dropselect
-            dropselect = ttk.OptionMenu(self, funcion, *opciones)
+            dropselect = ttk.OptionMenu(selectframe, funcion, *opciones)
             dropselect.pack(padx=5, pady =5, ipadx=5, ipady=5)
 
 
@@ -528,8 +613,8 @@ class Show_emd(tk.Frame):
                             f.writelines(new_pos+"    "+str(i)+"\n")
                         f.close()
                         
+            selectframe.pack()
             
-            my_frame_grid=tk.Frame(self)
             my_frame_grid.pack() 
             ttk.Button(my_frame_grid, text="Desplegar grafica", command=ver_dme).grid(row=0, column=0,padx=5, pady =5, ipadx=5, ipady=5)
             ttk.Button(my_frame_grid, text="Comparacion con los datos", command=prueba).grid(row=0, column=2,padx=5, pady =5, ipadx=5, ipady=5)
@@ -540,9 +625,19 @@ class Show_emd(tk.Frame):
         parejo.pack()
 
         def btn_regresar():
-            controller.show_frame(Show_data)
+            ttk.Button(parejo, text="Desplegar DME", command=desplegar_emd, state='enabled').grid(row=0,column=1,padx=5, pady =5, ipadx=5, ipady=5)
             for widget in frametodo.winfo_children():
                 widget.destroy()
+            
+            for widget in selectframe.winfo_children():
+                widget.destroy()
+            
+            for widget in my_frame_grid.winfo_children():
+                widget.destroy()
+            controller.show_frame(Show_data)
+           
+            
+            
 
         ttk.Button(parejo, text="Volver", command=btn_regresar).grid(row=0, column=0,padx=5, pady =5, ipadx=5, ipady=5)
         ttk.Button(parejo, text="Desplegar DME", command=desplegar_emd).grid(row=0, column=1,padx=5, pady =5, ipadx=5, ipady=5)
