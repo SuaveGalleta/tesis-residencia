@@ -2,7 +2,7 @@
 """
 Created on Tue Aug 28 15:15:20 2018
 
-@author: maorc, gcetzalb, esuarez
+@author: esuarez
 """
 #bibliotecas
 

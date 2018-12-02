@@ -43,7 +43,7 @@ class AnalisisClima(tk.Tk):
 
         self.frames={}
 
-        for F in (Inicio, Show_dialog, Show_data):
+        for F in (Inicio, Show_dialog, Show_data, Show_emd):
 
         
             frame= F(container, self)
@@ -311,72 +311,165 @@ class Show_data(tk.Frame):
         #boton ver grafica
         boton_grafica = ttk.Button(framebotones, text="Ver gráfica", command=ver_grafica)
         boton_grafica.grid(row=0, column=2,padx=5, pady =5, ipadx=5, ipady=5) 
-                 
-        
-
-
-        def ver_dme2():
+       
+        def aplicar():
+            controller.show_frame(Show_emd)
             for widget in frametree.winfo_children():
                 widget.destroy()
-            
-          
+        
 
-            boton_regresar= ttk.Button(framebotones, text="Volver", command=regresar, state='disabled')
+        def ver_dme():
+            array1year=[]
+            array1month=[]
+            array2=[]
+            #limpieza de datos
+            for line in open(path):
+                array1year.append(line[0:4])
+                array1month.append(line[4:6])
+                if line[7]=='-':
+                    array2.append(line[7:])
+                    
+                else:
+                    array2.append(line[7:])
+                    
+                    
+  
+            lista = []
+            lista2 = []
+            listaGeneral = []
+            for valor in array2:
+                lista.append(valor.rstrip('\n'))
+                #print(lista)          
+            for sal in range(len(lista)):
+                lista2.append(array1year[sal] +'-'+array1month[sal])
+                #print(lista2)
+            #creación del dataframe
+            
+            listaGeneral = dict(zip(lista2[1:], lista[1:]))
+            tupla = listaGeneral.items()
+            df = pd.DataFrame(list(tupla))
+            df.columns = [ "fecha", "valor"]
+            global my_graph
+            my_graph = df["valor"].astype(float)
+
+            global new_list
+            new_list = lista[1:]
+
+            dataoni = []
+            for item in new_list:
+                dataoni.append(float(item))
+            signal = np.array(dataoni)
+            emd = EMD()
+            IMFS = emd.emd(signal)
+            funcion= tk.StringVar(framedme)
+            funcion.set("Seleccione la Descomposición")
+
+            opciones = []
+            for line in range(len(IMFS)):
+                opciones.append(line)
+                #print (line)            
+            global dropselect
+            dropselect = ttk.OptionMenu(framedme, funcion, *opciones)
+            dropselect.pack(padx=5, pady =5, ipadx=5, ipady=5)
+
+        ttk.Button(framebotones,text="Aplicar DME" ,command=lambda:controller.show_frame(Show_emd)).grid(row=0, column=3,padx=5, pady =5, ipadx=5, ipady=5)
+        
+"""
+#ventana mostrar grafica
+class Show_graph(tk.Frame):
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self, parent)
+        
+        tk.Label(self, text="Gráfica", font=("Arial",20)).pack()
+        frame_bonito = tk.Frame(self)
+        frame_bonito.pack()
+        
+        
+        
+       
+        #Funcion para realizar la grafica
+        def ver_grafica():
+            array1year=[]
+            array1month=[]
+            array2=[]
+            #limpieza de datos
+            for line in open(path):
+                array1year.append(line[0:4])
+                array1month.append(line[4:6])
+                if line[7]=='-':
+                    array2.append(line[7:])
+                    
+                else:
+                    array2.append(line[7:])
+                    
+                    
+    
+            lista = []
+            lista2 = []
+            listaGeneral = []
+            for valor in array2:
+                lista.append(valor.rstrip('\n'))
+                #print(lista)          
+            for sal in range(len(lista)):
+                lista2.append(array1year[sal] +'-'+array1month[sal])
+                #print(lista2)
+            #creación del dataframe
+            
+            listaGeneral = dict(zip(lista2[1:], lista[1:]))
+            tupla = listaGeneral.items()
+            df = pd.DataFrame(list(tupla))
+            df.columns = [ "fecha", "valor"]
+            global my_graph
+            my_graph = df["valor"].astype(float)
+            global new_list
+            new_list = lista[1:]
+        
+            file_name = os.path.basename(path)
+            index_of_dot = file_name.index('.')
+            file_name_without_extension = file_name[:index_of_dot]
+            #print (file_name_without_extension)
+            a.clear
+            a.plot(my_graph)
+            a.set_title(file_name_without_extension)
+            a.set_ylabel(lista[0])
+            a.set_xlabel("Dato")            
+            global canvas
+            canvas = FigureCanvasTkAgg(f, self)
+            canvas.show()
+            canvas.get_tk_widget().pack(side = tk.TOP, fill = tk.BOTH, expand = True)
+            ttk.Button(frame_bonito,text="Aplicar EMD", command=next).grid(row=0, column= 3,padx=5, pady =5, ipadx=5, ipady=5)
+            boton_regresar= ttk.Button(frame_bonito, text="Volver", command=reg)
             boton_regresar.grid(row=0, column=0, padx=5, pady =5, ipadx=5, ipady=5)
-            #boton para desplegar datos
-            boton_select= ttk.Button(framebotones,text="Desplegar Tabla", command=ver, state='disabled') 
-            boton_select.grid(row=0,column=1,padx=5, pady =5, ipadx=5, ipady=5)
-            ttk.Button(framebotones,text="Aplicar DME" ,command=ver_dme2, state='disabled').grid(row=0, column=3,padx=5, pady =5, ipadx=5, ipady=5)
-            #boton ver grafica
-            boton_grafica = ttk.Button(framebotones, text="Ver gráfica", command=ver_grafica, state='disabled')
-            boton_grafica.grid(row=0, column=2,padx=5, pady =5, ipadx=5, ipady=5) 
-
-
-
-            
-                
-
-
-
-
-            self.show_dme = tk.Toplevel()
-         
-            selectframe = tk.Frame(self.show_dme)
-            my_frame_grid=tk.Frame(self.show_dme)
-            frametodo= tk.Frame(self.show_dme)
-
-            def borrar():
-                boton_regresar= ttk.Button(framebotones, text="Volver", command=regresar, state='enabled')
-                boton_regresar.grid(row=0, column=0, padx=5, pady =5, ipadx=5, ipady=5)
-                #boton para desplegar datos
-                boton_select= ttk.Button(framebotones,text="Desplegar Tabla", command=ver, state='enabled') 
-                boton_select.grid(row=0,column=1,padx=5, pady =5, ipadx=5, ipady=5)
-                ttk.Button(framebotones,text="Aplicar DME" ,command=ver_dme2, state='enabled').grid(row=0, column=3,padx=5, pady =5, ipadx=5, ipady=5)
-                #boton ver grafica
-                boton_grafica = ttk.Button(framebotones, text="Ver gráfica", command=ver_grafica, state='enabled')
-                boton_grafica.grid(row=0, column=2,padx=5, pady =5, ipadx=5, ipady=5)
-                for widget in frametodo.winfo_children():
-                    widget.destroy()
-            
-                for widget in selectframe.winfo_children():
-                    widget.destroy()
-            
-                for widget in my_frame_grid.winfo_children():
-                    widget.destroy()
-                
            
-                self.show_dme.destroy()
+        def reg():
+            canvas.get_tk_widget().destroy()
+            a.clear()
+            controller.show_frame(Show_data)
+        #boton regresar
+        boton_regresar= ttk.Button(frame_bonito, text="Volver", command=lambda:controller.show_frame(Show_data))
+        boton_regresar.grid(row=0, column=0, padx=5, pady =5, ipadx=5, ipady=5)
+        #boton desplegar la grafica
+        
+        ttk.Button(frame_bonito,text="Desplegar gráfica", command=ver_grafica).grid(row=0, column= 1,padx=5, pady =5, ipadx=5, ipady=5)
+        
+        def next():
+            canvas.get_tk_widget().destroy()
+            a.clear()
+            controller.show_frame(Show_emd)
+        ttk.Button(frame_bonito,text="Aplicar EMD", command=lambda:controller.show_frame(Show_emd)).grid(row=0, column= 3,padx=5, pady =5, ipadx=5, ipady=5)
+"""
 
-            ttk.Button(self.show_dme,text="Volver", command=borrar).pack(padx=5, pady =5, ipadx=5, ipady=5)
-            tk.Label(self.show_dme, text="Descomposición Modal Empírica",font=("Arial", 20)).pack(padx=5,   pady =5, ipadx=5, ipady=5)
-            def on_exit():
-                messagebox.showerror("Error", "Para salir de clic al botón volver", parent=self.show_dme)
+#ventana para ver el EMD
+class Show_emd(tk.Frame):
 
-            self.show_dme.protocol("WM_DELETE_WINDOW", on_exit)
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self,parent)     
 
-
-
-
+        tk.Label(self, text="Descomposición Modal Empírica",font=("Arial", 20)).pack(padx=5, pady =5, ipadx=5, ipady=5) 
+        
+        selectframe = tk.Frame(self)
+        my_frame_grid=tk.Frame(self)
+        def desplegar_emd():
             array1year=[]
             array1month=[]
             array2=[]
@@ -429,12 +522,21 @@ class Show_data(tk.Frame):
             global dropselect
             dropselect = ttk.OptionMenu(selectframe, funcion, *opciones)
             dropselect.pack(padx=5, pady =5, ipadx=5, ipady=5)
+
+
+            ttk.Button(parejo, text="Desplegar DME", command=desplegar_emd, state='disabled').grid(row=0,column=1,padx=5, pady =5, ipadx=5, ipady=5)
+
+          
+
+
+           
+
             
             def ver_dme():
                 global seleccion
                 seleccion= funcion.get()
                 if(seleccion=="Seleccione la Descomposición"):
-                    messagebox.showerror("Error", "Selecciona una DME para visualizar", parent=self.show_dme)
+                    messagebox.showerror("Error", "Selecciona una DME para visualizar")
                 else:
                     for widget in frametodo.winfo_children():
                         widget.destroy()
@@ -452,7 +554,7 @@ class Show_data(tk.Frame):
             def prueba():
                 seleccion= funcion.get()
                 if (seleccion == "Seleccione la Descomposición"):
-                    messagebox.showerror("Error", "Selecciona una DME para visualizar", parent=self.show_dme)
+                     messagebox.showerror("Error", "Selecciona una DME para visualizar")
                 else:
                     for widget in frametodo.winfo_children():
                         widget.destroy()
@@ -462,16 +564,13 @@ class Show_data(tk.Frame):
                     #print (file_name_without_extension)
                     global mycanvas3
                     a.clear()
-                    a.plot(my_graph)
                     a.plot(IMFS[int(seleccion)])
+                    a.plot(my_graph)
                     a.set_title(file_name_without_extension + " y " + "IMF "+str(seleccion) )
+                    nuevo_frame = tk.Frame(self)
                     canvas3 = FigureCanvasTkAgg(f, frametodo)
                     canvas3.show()
                     canvas3.get_tk_widget().pack(side = tk.TOP, fill = tk.BOTH, expand = True)
-                    toolbar = NavigationToolbar2TkAgg(canvas3,self.show_dme)
-                    toolbar.update()
-                    toolbar.pack()
-                    #canvas3._tkcanvas.pack(side = tk.TOP, fill = tk.BOTH, expand = True)
                     mycanvas3 = canvas3
 
 
@@ -479,11 +578,23 @@ class Show_data(tk.Frame):
                 
                 my_dme= funcion.get()
                 if (my_dme == "Seleccione la Descomposición"):
-                    messagebox.showerror("Error", "Selecciona una DME para guardar", parent=self.show_dme)
+                    messagebox.showerror("Error", "Selecciona una DME para guardar")
                 else:
                     for widget in frametodo.winfo_children():
                         widget.destroy()
-                    messagebox.showinfo("Correcto", "Archivo Guardado con exito", parent=self.show_dme)
+                    messagebox.showinfo("Correcto", "Archivo Guardado con exito")
+                    """
+                    with open('DME '+my_dme+'.csv', 'w') as f:
+                        thewritter = csv.writer(f)
+                        posicion=0
+                        thewritter.writerow(["Posicion"+"   " , "IMFS "+my_dme])
+                        for i in IMFS[int(my_dme)]:
+                            posicion=posicion+1
+                            pos = str(posicion)
+                            new_pos = pos.zfill(4)
+                            new_pos = pos.rjust(4,'0')
+                            thewritter.writerow([new_pos+"  ", i])
+                    """
                     with open('DME '+my_dme+'.dat', 'w') as f:
                         f.write("Pos    IMFS "+my_dme+"\n")
                         posicion=0
@@ -502,18 +613,34 @@ class Show_data(tk.Frame):
             ttk.Button(my_frame_grid, text="Comparacion con los datos", command=prueba).grid(row=0, column=2,padx=5, pady =5, ipadx=5, ipady=5)
             ttk.Button(my_frame_grid, text="Guardar DME", command=guardar).grid(row=0, column=3,padx=5, pady =5, ipadx=5, ipady=5)
             frametodo.pack()
+            
+        parejo=tk.Frame(self)
+        parejo.pack()
 
-          
-        
+        def btn_regresar():
+            ttk.Button(parejo, text="Desplegar DME", command=desplegar_emd, state='enabled').grid(row=0,column=1,padx=5, pady =5, ipadx=5, ipady=5)
+            for widget in frametodo.winfo_children():
+                widget.destroy()
+            
+            for widget in selectframe.winfo_children():
+                widget.destroy()
+            
+            for widget in my_frame_grid.winfo_children():
+                widget.destroy()
+            controller.show_frame(Show_data)
+           
+            
+            
 
-        ttk.Button(framebotones,text="Aplicar DME" ,command=ver_dme2).grid(row=0, column=3,padx=5, pady =5, ipadx=5, ipady=5)
+        ttk.Button(parejo, text="Volver", command=btn_regresar).grid(row=0, column=0,padx=5, pady =5, ipadx=5, ipady=5)
+        ttk.Button(parejo, text="Desplegar DME", command=desplegar_emd).grid(row=0, column=1,padx=5, pady =5, ipadx=5, ipady=5)
+        frametodo= tk.Frame(self)
+       
+    
+
 
 
     
 
-
-   
-
 app= AnalisisClima()
 app.mainloop()
-
