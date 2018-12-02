@@ -28,6 +28,7 @@ style.use("ggplot")
 f = Figure(figsize=(10,5), dpi=100)
 a = f.add_subplot(111)
 
+
 class AnalisisClima(tk.Tk):
 
     def __init__(self):
@@ -87,12 +88,21 @@ class Show_dialog(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self,parent)
 
+
+
+        def siguiente():
+            abrir_archivo = ttk.Button(framedialog, text="Ver Archivo Seleccionado", command=siguiente, state='disabled')
+            abrir_archivo.grid(row=0, column=1, padx=5, pady =5, ipadx=5, ipady=5)
+            mi_ruta.config(text="Ningun Archivo Seleccionado")
+            controller.show_frame(Show_data)
+           
+
+
         def forzar():
             abrir_archivo = ttk.Button(framedialog, text="Ver Archivo Seleccionado", command=lambda:controller.show_frame(Show_data), state='disabled')
             abrir_archivo.grid(row=0, column=1, padx=5, pady =5, ipadx=5, ipady=5)
             controller.show_frame(Inicio)
-            mi_ruta=tk.Label(framelabel, text="Ningun Archivo Seleccionado")
-            mi_ruta.grid(row=0, column=1,padx=5, pady =5, ipadx=5, ipady=5)
+            mi_ruta.config(text="Ningun Archivo Seleccionado")
 
 
 
@@ -107,7 +117,7 @@ class Show_dialog(tk.Frame):
     
  
        
-
+        
         #funcion para abrir ventana de seleccion del archivo
         def opendialog():
             #ruta.filename=filedialog.askdirectory()
@@ -118,17 +128,18 @@ class Show_dialog(tk.Frame):
 
             if(path == "" or not path):
                 messagebox.showerror("Error", "Selecciones un archivo para continuar")
-                abrir_archivo = ttk.Button(framedialog, text="Ver Archivo Seleccionado", command=lambda:controller.show_frame(Show_data), state='disabled')
+                abrir_archivo = ttk.Button(framedialog, text="Ver Archivo Seleccionado", command=siguiente, state='disabled')
                 abrir_archivo.grid(row=0, column=1, padx=5, pady =5, ipadx=5, ipady=5)
                 mi_ruta.config(text="Ningun Archivo Seleccionado")
 
                 #mi_ruta=tk.Label(framelabel, text="Ningun Archivo Seleccionado")
                 #mi_ruta.grid(row=0, column=1,padx=5, pady =5, ipadx=5, ipady=5)
             else:
+               
 
                 file_name = os.path.basename(path)
                 mi_ruta.config(text=file_name)
-                abrir_archivo = ttk.Button(framedialog, text="Ver Archivo Seleccionado", command=lambda:controller.show_frame(Show_data), state='enabled')
+                abrir_archivo = ttk.Button(framedialog, text="Ver Archivo Seleccionado", command=siguiente, state='enabled')
                 abrir_archivo.grid(row=0, column=1, padx=5, pady =5, ipadx=5, ipady=5)
            
             
@@ -229,14 +240,7 @@ class Show_data(tk.Frame):
 
               
         
-
-        head=tk.Label(self,text="Visualización de los datos", font=("Arial", 20))
-        head.pack(padx=5, pady =5, ipadx=5, ipady=5)
-        framebotones=tk.Frame(self)
-        framebotones.pack(padx=5, pady =5, ipadx=5, ipady=5)
-        framedme.pack()
-        frametree.pack()
-        #boton regresar
+         #boton regresar
         def regresar():
             controller.show_frame(Show_dialog)
             for widget in frametree.winfo_children():
@@ -244,8 +248,15 @@ class Show_data(tk.Frame):
 
 
 
-        boton_regresar= ttk.Button(framebotones, text="Volver", command=regresar)
-        boton_regresar.grid(row=0, column=0, padx=5, pady =5, ipadx=5, ipady=5)
+        boton_regresar= ttk.Button(self, text="Volver", command=regresar)
+        boton_regresar.pack(padx=5, pady =5, ipadx=5, ipady=5)
+        head=tk.Label(self,text="Visualización de los datos", font=("Arial", 20))
+        head.pack(padx=5, pady =5, ipadx=5, ipady=5)
+        framebotones=tk.Frame(self)
+        framebotones.pack(padx=5, pady =5, ipadx=5, ipady=5)
+        framedme.pack()
+        frametree.pack()
+       
         #boton para desplegar datos
         boton_select= ttk.Button(framebotones,text="Desplegar Tabla", command=ver) 
         boton_select.grid(row=0,column=1,padx=5, pady =5, ipadx=5, ipady=5)
@@ -298,13 +309,17 @@ class Show_data(tk.Frame):
             #print (file_name_without_extension)
             a.clear()
             a.plot(my_graph)
+            a.legend(["Datos "+lista[0]])
             a.set_title(file_name_without_extension)
             a.set_ylabel(lista[0])
-            a.set_xlabel("Dato")            
+            a.set_xlabel("Cantidad de datos")            
             global canvas
             canvas = FigureCanvasTkAgg(f, frametree)
             canvas.show()
             canvas.get_tk_widget().pack(side = tk.TOP, fill = tk.BOTH, expand = True)
+            toolbar = NavigationToolbar2TkAgg(canvas,frametree)
+            toolbar.update()
+            toolbar.pack()
             
             
 
@@ -441,11 +456,15 @@ class Show_data(tk.Frame):
                     global my_canvas           
                     a.clear()        
                     a.plot(IMFS[int(seleccion)])
-                    a.set_title("IMF "+str(seleccion))
+                    a.legend(["IMF "+str(seleccion)])
+                    a.set_title("DME "+str(seleccion))
                     a.set_xlabel("Tiempo [s]")
                     canvas2 = FigureCanvasTkAgg(f, frametodo)
                     canvas2.show()
                     canvas2.get_tk_widget().pack(side = tk.TOP, fill = tk.BOTH, expand = True)
+                    toolbar = NavigationToolbar2TkAgg(canvas2,frametodo)
+                    toolbar.update()
+                    toolbar.pack()
                     my_canvas = canvas2
 
 
@@ -461,14 +480,17 @@ class Show_data(tk.Frame):
                     file_name_without_extension = file_name[:index_of_dot]
                     #print (file_name_without_extension)
                     global mycanvas3
+                  
+                   
                     a.clear()
                     a.plot(my_graph)
                     a.plot(IMFS[int(seleccion)])
-                    a.set_title(file_name_without_extension + " y " + "IMF "+str(seleccion) )
+                    a.legend(["Datos "+lista[0],"IMF "+str(seleccion)])
+                    a.set_title(file_name_without_extension + " y " + "DME "+str(seleccion) )
                     canvas3 = FigureCanvasTkAgg(f, frametodo)
                     canvas3.show()
                     canvas3.get_tk_widget().pack(side = tk.TOP, fill = tk.BOTH, expand = True)
-                    toolbar = NavigationToolbar2TkAgg(canvas3,self.show_dme)
+                    toolbar = NavigationToolbar2TkAgg(canvas3,frametodo)
                     toolbar.update()
                     toolbar.pack()
                     #canvas3._tkcanvas.pack(side = tk.TOP, fill = tk.BOTH, expand = True)
