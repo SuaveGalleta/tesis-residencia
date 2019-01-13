@@ -7,11 +7,11 @@ from tkinter import ttk
 import matplotlib
 matplotlib.use("TkAgg")
 import matplotlib.pyplot as tls
-from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2TkAgg
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2Tk
 from matplotlib.figure import Figure
 import matplotlib.animation as animation
 from matplotlib import	style
-from PyEMD import EMD
+#from PyEMD import EMD
 import numpy as np
 import re
 import scipy.io
@@ -349,10 +349,10 @@ class Show_data(tk.Frame):
             global canvas
             #se agrega la gráfica al canvas
             canvas = FigureCanvasTkAgg(f, frametree)
-            canvas.show()
+            canvas.draw()
             canvas.get_tk_widget().pack(side = tk.TOP, fill = tk.BOTH, expand = True)
             #barra de opciones para un mejor análisis de la gráfica
-            toolbar = NavigationToolbar2TkAgg(canvas,frametree)
+            toolbar = NavigationToolbar2Tk(canvas,frametree)
             toolbar.update()
             toolbar.pack()
             
