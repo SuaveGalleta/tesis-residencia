@@ -11,7 +11,7 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolb
 from matplotlib.figure import Figure
 import matplotlib.animation as animation
 from matplotlib import	style
-#from PyEMD import EMD
+from PyEMD import EMD
 import numpy as np
 import re
 import scipy.io
@@ -527,10 +527,10 @@ class Show_data(tk.Frame):
                     a.set_xlabel("Tiempo [s]")
                     #pone la gráfica dentro del canvas
                     canvas2 = FigureCanvasTkAgg(f, frametodo)
-                    canvas2.show()
+                    canvas2.draw()
                     canvas2.get_tk_widget().pack(side = tk.TOP, fill = tk.BOTH, expand = True)
                     #agrega barra de herraminetas para la gráfica
-                    toolbar = NavigationToolbar2TkAgg(canvas2,frametodo)
+                    toolbar = NavigationToolbar2Tk(canvas2,frametodo)
                     toolbar.update()
                     toolbar.pack()
                     my_canvas = canvas2
@@ -563,10 +563,10 @@ class Show_data(tk.Frame):
                     a.set_title(file_name_without_extension + " y " + "DME "+str(seleccion) )
                     #agrega la gráfica al canvas
                     canvas3 = FigureCanvasTkAgg(f, frametodo)
-                    canvas3.show()
+                    canvas3.draw()
                     canvas3.get_tk_widget().pack(side = tk.TOP, fill = tk.BOTH, expand = True)
                     #barra de herraminentas para la gráfica
-                    toolbar = NavigationToolbar2TkAgg(canvas3,frametodo)
+                    toolbar = NavigationToolbar2Tk(canvas3,frametodo)
                     toolbar.update()
                     toolbar.pack()
                     #canvas3._tkcanvas.pack(side = tk.TOP, fill = tk.BOTH, expand = True)
