@@ -13,6 +13,8 @@ import matplotlib.pyplot as tls
 import scipy.io
 from PyEMD import EMD
 import sympy as sy
+import tensorflow as tf
+import tflearn as tfl
 
 #limpieza de datos a graficar
 
@@ -116,6 +118,8 @@ segundaderi = derivadas(primeraderi)
 #print(segundaderi)
 #tls.show()
 
-
+#red neuronal artificial
+entradas
+capa1 = 9
   
 
