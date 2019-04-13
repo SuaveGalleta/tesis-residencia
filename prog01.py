@@ -18,6 +18,53 @@ import tflearn as tfl
 
 #limpieza de datos a graficar
 
+#datos IST
+array2year=[]
+array2month=[]
+array3=[]
+for line in open('TSI_reconstruc.dat'):
+    #array.append(re.findall(pattern,line))
+    array2year.append(line[0:4])
+    array2month.append(line[4:6])
+    
+    if line[7]=='-':
+        array3.append(line[7:])
+        
+    else:
+        array3.append(line[7:])
+
+lista3 = []
+lista4 = []
+listaGeneral2 = []
+for valor in array3:
+    lista3.append(valor.rstrip('\n'))
+
+
+
+for sal in range(len(lista3)):
+    lista4.append(array2year[sal] +'-'+array2month[sal])
+
+
+
+
+
+#creación del dataframe y gráfica
+
+listaGeneral2 = dict(zip(lista4[1:], lista3[1:]))
+tupla2 = listaGeneral2.items()
+df2 = pd.DataFrame(list(tupla2))
+df2.columns = [ "fecha", "valor"]
+tls.plot(df2["valor"].astype(float))
+tls.title("IST")
+tls.xlabel("Años")
+tls.ylabel("Datos IST")
+tls.minorticks_on()
+tls.grid()
+#tls.show()
+
+
+
+#datos Oni
 array1year=[]
 array1month=[]
 array2=[]
@@ -27,10 +74,10 @@ for line in open('Mensuales_ONI.dat'):
     array1month.append(line[4:6])
     
     if line[7]=='-':
-        array2.append(line[7:11])
+        array2.append(line[7:])
         
     else:
-        array2.append(line[7:10])
+        array2.append(line[7:])
   
 lista = []
 lista2 = []
@@ -40,7 +87,7 @@ for valor in array2:
 
 
 
-for sal in range(0, 623):
+for sal in range(len(lista)):
     lista2.append(array1year[sal] +'-'+array1month[sal])
 
 #creación del dataframe y gráfica
@@ -57,6 +104,7 @@ tls.minorticks_on()
 tls.grid()
 tls.xticks([0,100,200,300,400,500,600], [1996,1970,1980,1990,2000,2015,2017])
 #tls.show()
+print(lista)
 
 #Descomposición Modal Empirica (DME)
 
@@ -110,7 +158,7 @@ arrayemd = IMFS[3]
 nuevoarray =[]
 #reversearray = arrayemd[::-1]
 primeraderi = derivadas(arrayemd)
-print(primeraderi)
+#print(primeraderi)
 
 
 #segunda derivada
@@ -118,8 +166,50 @@ segundaderi = derivadas(primeraderi)
 #print(segundaderi)
 #tls.show()
 
-#red neuronal artificial
-entradas
-capa1 = 9
-  
 
+
+#datos para el entrenamiento
+x = df['fecha']
+y = df['valor']
+
+#datos para test
+testX = df2['fecha']
+testy = df2['valor']
+
+#red neuronal artificial
+entradas = 9
+capa1 = 128
+capa2 = 128
+capa3 = 128
+capa4 = 128
+capa5 = 128
+capa6 = 128
+capa7 = 128
+capa8 = 128
+capa9 = 128
+capa10 = 128
+clases = 10
+
+def modelo_red():
+    tf.reset_default_graph()
+    #capa de entrada
+    red = tfl.input_data([None, entradas])
+    #capas ocultas
+    red = tfl.fully_connected(red, capa1, activation='ReLU')
+    red = tfl.fully_connected(red, capa2, activation='ReLU')
+    red = tfl.fully_connected(red, capa3, activation='ReLU')
+    red = tfl.fully_connected(red, capa4, activation='ReLU')
+    red = tfl.fully_connected(red, capa5, activation='ReLU')
+    red = tfl.fully_connected(red, capa6, activation='ReLU')
+    red = tfl.fully_connected(red, capa7, activation='ReLU')
+    red = tfl.fully_connected(red, capa8, activation='ReLU')
+    red = tfl.fully_connected(red, capa9, activation='ReLU')
+    red = tfl.fully_connected(red, capa10, activation='ReLU')
+    #capa de salida
+    red = tfl.fully_connected(red, clases, activation='softmax')
+    red = tfl.regression(red, optimizer='sgd', learning_rate=0.1, loss='mean_square')
+    modelo = tfl.DNN(red)
+    return modelo
+
+modelo = modelo_red()
+modelo.fit(x, y, validation_set=0.3, show_metric=True, batch_size=9, n_epoch=100)
