@@ -45,7 +45,7 @@ for sal in range(len(lista3)):
     lista4.append(array2year[sal] +'-'+array2month[sal])
 
 
-
+#print(len(lista3))
 
 
 #creación del dataframe y gráfica
@@ -104,29 +104,32 @@ tls.minorticks_on()
 tls.grid()
 tls.xticks([0,100,200,300,400,500,600], [1996,1970,1980,1990,2000,2015,2017])
 #tls.show()
-print(lista)
+#print(lista)
 
 #Descomposición Modal Empirica (DME)
 
-nueva_list = lista[1:]
+nueva_list = lista3[1:]
 data_oni =[]
 for item in nueva_list:
     data_oni.append(float(item))
-x = np.linspace(0, 10, 623)
+x = np.linspace(0, 10, 407)
 signal = np.array(data_oni)
 emd = EMD()
 IMFS = emd.emd(signal)
 #print(IMFS[2])
-#N = IMFS.shape[0]+1
+N = IMFS.shape[0]+2
 
-"""
+
+
+
 for i, imf in enumerate(IMFS):
     tls.figure("DME")
     tls.subplot(N,1,i+2)
     tls.plot(x,imf, 'g')
-    tls.title("IMF "+str(i+1))
+    tls.title("\n IMF "+str(i+1))
     tls.xlabel("Time [s]")
-"""
+
+tls.show()
 
 #apartado de las derivadas
 #print(IMFS[3])
@@ -211,5 +214,5 @@ def modelo_red():
     modelo = tfl.DNN(red)
     return modelo
 
-modelo = modelo_red()
-modelo.fit(x, y, validation_set=0.3, show_metric=True, batch_size=9, n_epoch=100)
+#modelo = modelo_red()
+#modelo.fit(x, y, validation_set=0.3, show_metric=True, batch_size=9, n_epoch=100)
