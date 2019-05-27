@@ -151,9 +151,8 @@ array_train = los_dme[5]+primera_deri_dme5+segunda_deri_dme5+los_dme[6]+primera_
 
 
 
-print(len(array_train))
-print("--------------------")   
-print(array_train)
+
+
 
 
 
@@ -166,9 +165,6 @@ trainX = np.float32(x2)
 trainX  = trainX.reshape(37,11)
 
 trainY = trainY.reshape(37,11)
-
-print("-----------------")
-print(trainY)
 
 testX = np.float32(x1)
 testY = np.float32(realy)
@@ -232,15 +228,15 @@ def crear_modelo():
 #22%
 #batch = none
 #validation = 0.1
-|
-#mimodelo = crear_modelo()
+
+mimodelo = crear_modelo()
 
 #entranimento de la red
-#mimodelo.fit(trainY, trainX, validation_set=0.3, show_metric=True, batch_size=9, n_epoch=75)
+mimodelo.fit(trainX, trainY, validation_set=0.3, show_metric=True, batch_size=9, n_epoch=100)
 
 #prediccion usando la red
-#predicciones = np.array(mimodelo.predict(testY)).argmax(axis = 1)
-#correctas = testX.argmax(axis = 1)
+#predicciones = np.array(mimodelo.predict(testX)).argmax(axis = 1)
+#correctas = testY.argmax(axis = 1)
 #certeza = np.mean(predicciones == correctas, axis=0)
 #print("La certeza es de: ", certeza)
 
@@ -248,11 +244,7 @@ def crear_modelo():
 #print(mimodelo.fit(trainX, trainY, validation_set=0.3, show_metric=True, batch_size=9, n_epoch=100))
 #print(predicciones)
 
-#ls.plot(predicciones, label='testing data')
-#tls.plot(y2, label="training data" )
-#tls.plot(los_dme[5])
-#tls.plot(los_dme[6])
-#tls.plot(los_dme[7])
+#tls.plot(predicciones, label='testing data')
 #tls.legend(loc='upper left')
 
 

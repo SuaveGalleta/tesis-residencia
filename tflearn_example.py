@@ -19,12 +19,12 @@ def crear_modelo():
     red = tflearn.regression(red, optimizer='sgd', learning_rate=0.01, loss='categorical_crossentropy')
     modelo = tflearn.DNN(red)
     return modelo
-
+  
 modelo = crear_modelo()
 modelo.fit(trainX, trainY, validation_set=0.1, show_metric=True, batch_size=500, n_epoch=100)
 
-#predicciones = np.array(modelo.predict(testX)).argmax(axis = 1)
-#correctas = testY.argmax(axis = 1)
-#certeza = np.mean(predicciones == correctas, axis=0)
-#print("La certeza es de: ", certeza)
+predicciones = np.array(modelo.predict(testX)).argmax(axis = 1)
+correctas = testY.argmax(axis = 1)
+certeza = np.mean(predicciones == correctas, axis=0)
+print("La certeza es de: ", certeza)
 

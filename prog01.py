@@ -38,6 +38,7 @@ lista4 = []
 listaGeneral2 = []
 for valor in array3:
     lista3.append(valor.rstrip('\n'))
+    lista3.append(valor.replace('\t', ', '))
 
 
 
